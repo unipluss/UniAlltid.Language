@@ -1,0 +1,30 @@
+﻿[
+  {
+    "id": 1,
+    "keyId": "save",
+    "lang": "no",
+    "value": "Lagre",
+    "customer": null
+  },
+  {
+    "id": 2,
+    "keyId": "save",
+    "lang": "en",
+    "value": "Save",
+    "customer": null
+  },
+  {
+    "id": 3,
+    "keyId": "update",
+    "lang": "no",
+    "value": "Oppdater",
+    "customer": null
+  },
+  {
+    "id": 4,
+    "keyId": "update",
+    "lang": "en",
+    "value": "Update",
+    "customer": null
+  }
+]
