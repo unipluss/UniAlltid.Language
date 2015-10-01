@@ -6,6 +6,6 @@
 					["ngResource"])
         .constant("appSettings",
         {
-            serverPath: "http://unilangaugeapi.net"
+            serverPath: "http://unilanguageapi.azurewebsites.ne"
         });
 })();
