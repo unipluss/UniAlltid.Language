@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -16,7 +17,7 @@ namespace UniAlltid.Language.API.Code
             if (actionContext.Request.Headers.Contains("X-AccessToken"))
             {
                 var tokenvalue = actionContext.Request.Headers.GetValues("X-AccessToken").FirstOrDefault();
-                if (!string.IsNullOrWhiteSpace(tokenvalue) && tokenvalue.Equals(""))
+                if (!string.IsNullOrWhiteSpace(tokenvalue) && tokenvalue.Equals(ConfigurationManager.AppSettings["token"]))
                 {
                     return continuation();
                 }
@@ -27,7 +28,7 @@ namespace UniAlltid.Language.API.Code
             {
                 var retur = new HttpResponseMessage(HttpStatusCode.Unauthorized)
                 {
-                    Content =new StringContent("This resource cannot be used without accesstoken")
+                    Content = new StringContent("This resource cannot be used without access token")
                 };
 
                 return retur;

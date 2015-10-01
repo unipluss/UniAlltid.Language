@@ -2,28 +2,34 @@
 using System.Data;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using UniAlltid.Language.API.Code;
+using UniAlltid.Language.API.Models;
 
 namespace UniAlltid.Language.API.Controllers
 {
     [EnableCors("*", "*", "*")]
     [RoutePrefix("api/translation")]
+    [TokenAccessFilter]
     public class TranslationController : ApiController
     {
-        private readonly IDbConnection _connection;
+        private readonly LanguageRepository _repo;
 
         public TranslationController(IDbConnection connection)
         {
-            _connection = connection;
+            _repo = new LanguageRepository(connection);
         }
 
         [Route("{language}")]
         [HttpGet]
         public Dictionary<string, string> GetTranslations(string language, string customer = "")
         {
-            return new Dictionary<string, string>()
-            {
-                { language, "test" }
-            };
+            return _repo.RetrieveDictionary(language, customer);
+        }
+
+        [HttpPost]
+        public void CreateOrUpdate(NewTranslation translation)
+        {
+            // create if not exist
         }
     }
 }

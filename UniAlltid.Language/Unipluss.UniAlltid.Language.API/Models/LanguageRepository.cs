@@ -1,40 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Web.Http;
-using System.Web.Http.Cors;
+using System.Web.Hosting;
 using Dapper;
-using UniAlltid.Language.API.Models;
+using Newtonsoft.Json;
 
-namespace UniAlltid.Language.API.Controllers
+namespace UniAlltid.Language.API.Models
 {
-    [EnableCors("*", "*", "*")]
-    [RoutePrefix("api/languages")]
-    public class LanguagesController : ApiController
+    public class LanguageRepository
     {
         private readonly IDbConnection _connection;
-        private readonly LanguageRepository _repo;
-       
 
-        public LanguagesController(IDbConnection connection)
+        public LanguageRepository(IDbConnection connection)
         {
             _connection = connection;
-            _repo = new LanguageRepository(_connection);
         }
 
-        // GET: api/languages
-        [HttpGet]
-        public IEnumerable<Translation> Get(string customer="", string language="")
+        internal IEnumerable<Translation> Retrieve(string customer, string language)
         {
-            return _repo.Retrieve(customer, language);
+            if (String.IsNullOrEmpty(customer) && String.IsNullOrEmpty(language))
+                return GetDefaultValues();
+
+            else
+                return GetFilteredValues(customer, language);
         }
 
-        // GET: api/languages/language?customer=optional
-        [Route("{language}")]
-        [HttpGet]
-        public Dictionary<string, string> GetTranslations(string language, string customer = "")
+        internal Dictionary<string, string> RetrieveDictionary(string language, string customer)
         {
             var translations = GetFilteredValues(customer, language);
 
@@ -43,11 +38,10 @@ namespace UniAlltid.Language.API.Controllers
             return dict;
         }
 
-        // POST: api/languages
-        [HttpPost]
-        public void Post([FromBody]NewTranslation translation)
+        internal void Create(NewTranslation translation)
         {
-            //TODO: Check if key exists
+            if(KeyAlreadyExists(translation.KeyId))
+                throw new Exception("Key already exists");
 
             StringBuilder sql = new StringBuilder();
             sql.AppendLine("insert into t_language");
@@ -63,18 +57,15 @@ namespace UniAlltid.Language.API.Controllers
             });
         }
 
-        // PUT: api/languages/5
-        [HttpPut]
-        public void Put([FromBody]Translation translation, [FromUri] string selectedCustomer = "")
+        internal void Update(Translation translation, string selectedCustomer)
         {
             StringBuilder sql = new StringBuilder();
-
 
             // if customer = "": update t_language set value = value where id = id
             if (String.IsNullOrEmpty(translation.Customer) && String.IsNullOrEmpty(selectedCustomer))
             {
                 sql.AppendFormat("update t_language set value = @value where id=@id");
-                _connection.Execute(sql.ToString(), new {value = translation.Value, id = translation.Id});
+                _connection.Execute(sql.ToString(), new { value = translation.Value, id = translation.Id });
             }
             else if (!String.IsNullOrEmpty(translation.Customer))
             {
@@ -83,7 +74,7 @@ namespace UniAlltid.Language.API.Controllers
 
                 Translation defaultEntry =
                     _connection.Query<Translation>(sql.ToString(),
-                        new {keyid = translation.KeyId, lang = translation.Lang}).First();
+                        new { keyid = translation.KeyId, lang = translation.Lang }).First();
 
                 // Check if value = value. If yes, delete custom value entry in db (set to default value)
                 if (translation.Value == defaultEntry.Value)
@@ -91,13 +82,13 @@ namespace UniAlltid.Language.API.Controllers
                     // delete lanaguage from db
                     sql = new StringBuilder();
                     sql.AppendLine("delete from t_language where id=@id");
-                    _connection.Execute(sql.ToString(), new {id = translation.Id});
+                    _connection.Execute(sql.ToString(), new { id = translation.Id });
                 }
                 else
                 {
                     sql = new StringBuilder();
                     sql.AppendFormat("update t_language set value = @value where id=@id");
-                    _connection.Execute(sql.ToString(), new {value = translation.Value, id = translation.Id});
+                    _connection.Execute(sql.ToString(), new { value = translation.Value, id = translation.Id });
                 }
             }
             else
@@ -117,11 +108,6 @@ namespace UniAlltid.Language.API.Controllers
             }
         }
 
-        // DELETE: api/languages/5
-        public void Delete(int id)
-        {
-        }
-
         private IEnumerable<Translation> GetDefaultValues()
         {
             StringBuilder sql = new StringBuilder();
@@ -130,7 +116,7 @@ namespace UniAlltid.Language.API.Controllers
             return _connection.Query<Translation>(sql.ToString()).ToList();
         }
 
-        private IEnumerable<Translation> GetFilteredValues(string customer, string language)
+         private IEnumerable<Translation> GetFilteredValues(string customer, string language)
         {
             StringBuilder sql = new StringBuilder();
 
@@ -168,5 +154,13 @@ namespace UniAlltid.Language.API.Controllers
 
             return _connection.Query<Translation>(sql.ToString(), new { customer, language }).ToList();
         }
+
+        private bool KeyAlreadyExists(string keyId)
+        {
+            var result = (int)_connection.ExecuteScalar("select count(*) from t_language where keyId = @keyId", new { keyId });
+
+            return result > 0;
+        }
+
     }
 }

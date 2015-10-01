@@ -1,0 +1,29 @@
+﻿body {
+  padding-top: 50px;
+}
+.main-content {
+  padding: 40px 15px;
+  text-align: center;
+}
+
+.pull-left {
+    margin-right: 5px !important;
+}
+
+
+.form-signin {
+  max-width: 380px;
+  padding: 15px 35px 35px;
+  margin: 0 auto;
+  background-color: #F8F8F8;
+  border: 1px solid rgba(0,0,0,0.1);  
+}
+
+.login-form {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.ng-cloak {
+    display: none;
+}

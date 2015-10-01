@@ -20,7 +20,7 @@
     <link href="Content/angular-ui-notification.min.css" rel="stylesheet" />
 </head>
 
-<body ng-app="app">
+<body ng-app="app" ng-controller="LanguagesController as vm">
 
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
@@ -31,7 +31,18 @@
     </nav>
 
     <div class="container main-content">
-        <div ng-include="'app/language/languages.html'"></div>
+        <!-- Login -->
+        <div class="row ng-cloak" ng-hide="vm.hasToken">
+            <div class="col-md-4 col-md-offset-4">
+                <form class="form-signin" novalidate>
+                    <h2>Token</h2>
+                    <input type="text" class="form-control login-form" placeholder="Token" ng-model="vm.accessToken" required="" autofocus="" />
+                    <button class="btn btn-lg btn-primary btn-block" ng-click="vm.setToken()" type="submit">Login</button>
+                </form>
+            </div>
+        </div>
+        <!-- Language table -->
+        <div ng-include="'app/language/languages.html'" ng-hide="!vm.hasToken"></div>
     </div>
 
 

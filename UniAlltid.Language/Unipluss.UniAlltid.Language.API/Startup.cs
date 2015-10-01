@@ -10,6 +10,7 @@ using Autofac;
 using Autofac.Integration.WebApi;
 using Microsoft.Owin;
 using Owin;
+using UniAlltid.Language.API.Controllers;
 
 [assembly: OwinStartup(typeof(UniAlltid.Language.API.Startup))]
 
@@ -28,7 +29,7 @@ namespace UniAlltid.Language.API
 
             SetupAutofac(app, config);
 
-            app.UseWebApi(config);
+            // app.UseWebApi(config);    FY FY!
 
             ConfigureAuth(app);
         }
@@ -45,7 +46,6 @@ namespace UniAlltid.Language.API
                 con.Open();
                 return con;
             }).As<IDbConnection>().InstancePerRequest();
-
 
             IContainer container = builder.Build();
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
