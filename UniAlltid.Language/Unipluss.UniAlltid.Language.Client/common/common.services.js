@@ -6,6 +6,6 @@
 					["ngResource"])
         .constant("appSettings",
         {
-            serverPath: "http://localhost:64926"
+            serverPath: "http://unilangaugeapi.net"
         });
 })();
