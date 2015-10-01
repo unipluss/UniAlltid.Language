@@ -43,8 +43,10 @@ namespace UniAlltid.Language.API.Controllers
             _repo.Update(translation, selectedCustomer);
         }
 
+        [HttpDelete]
         public void Delete(int id)
         {
+            _repo.Delete(id);
         }
     }
 }

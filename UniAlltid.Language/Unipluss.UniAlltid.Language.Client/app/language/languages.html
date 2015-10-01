@@ -54,6 +54,7 @@
                             <strong>Default value</strong>
                         </a>
                     </td>
+                    <td></td>
                 </tr>
                 </thead>
                 <tbody>
@@ -62,6 +63,7 @@
                     <td><a href="#" editable-text="language.value" onbeforesave="vm.updateValue(language)">{{ language.value }}</a></td>
                     <td><img ng-src="Content/images/{{ language.lang }}.png"/></td>
                     <td>{{ language.defaultValue }}</td>
+                    <td><a class="delete" href="#" ng-click="vm.deleteValue(language.id)" title="Delete this entry"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
                 </tr>
                 </tbody>
             </table>

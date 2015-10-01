@@ -27,3 +27,11 @@
 .ng-cloak {
     display: none;
 }
+
+.delete, .delete:active, .delete:visited, .delete:focus {
+    color: red;
+}
+
+.delete:hover {
+    color: darkred;
+}

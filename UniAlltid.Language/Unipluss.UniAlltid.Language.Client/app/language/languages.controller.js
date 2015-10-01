@@ -53,6 +53,17 @@
             });
         }
 
+        vm.deleteValue = function(id) {
+            var language = new languageResource();
+
+            language.$delete({ id: id }, function (data) {
+                Notification.success('Deleted from database!');
+                vm.reloadData();
+            }, function(error) {
+                Notification.error('Could not delete entry from database');
+            });
+        }
+
         vm.setToken = function() {
             localStorage.setItem('accessToken', vm.accessToken);
             vm.getToken();

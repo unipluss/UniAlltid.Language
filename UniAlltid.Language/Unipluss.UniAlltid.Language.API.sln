@@ -3,29 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unipluss.UniAlltid.Language.API", "UniAlltid.Language.API\Unipluss.UniAlltid.Language.API.csproj", "{F23CE9DC-DC42-4532-9115-AD6BA9399638}"
-EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "UniAlltid.Language.Client", "..\UniAlltid.Language.Client\", "{10604D99-82BE-4C98-9537-E7A2A37FF86B}"
-	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5.2"
-		Debug.AspNetCompiler.VirtualPath = "/localhost_64945"
-		Debug.AspNetCompiler.PhysicalPath = "..\UniAlltid.Language.Client\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_64945\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/localhost_64945"
-		Release.AspNetCompiler.PhysicalPath = "..\UniAlltid.Language.Client\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_64945\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "64945"
-		SlnRelativePath = "..\UniAlltid.Language.Client\"
-		DefaultWebSiteLanguage = "Visual C#"
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unipluss.UniAlltid.Language.API", "Unipluss.UniAlltid.Language.API\Unipluss.UniAlltid.Language.API.csproj", "{F23CE9DC-DC42-4532-9115-AD6BA9399638}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unipluss.UniAlltid.Language.Client", "Unipluss.UniAlltid.Language.Client\Unipluss.UniAlltid.Language.Client.csproj", "{46691859-D4D0-45B2-B438-96BF1BF73803}"
 EndProject
@@ -39,10 +17,6 @@ Global
 		{F23CE9DC-DC42-4532-9115-AD6BA9399638}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F23CE9DC-DC42-4532-9115-AD6BA9399638}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F23CE9DC-DC42-4532-9115-AD6BA9399638}.Release|Any CPU.Build.0 = Release|Any CPU
-		{10604D99-82BE-4C98-9537-E7A2A37FF86B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{10604D99-82BE-4C98-9537-E7A2A37FF86B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{10604D99-82BE-4C98-9537-E7A2A37FF86B}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{10604D99-82BE-4C98-9537-E7A2A37FF86B}.Release|Any CPU.Build.0 = Debug|Any CPU
 		{46691859-D4D0-45B2-B438-96BF1BF73803}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{46691859-D4D0-45B2-B438-96BF1BF73803}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46691859-D4D0-45B2-B438-96BF1BF73803}.Release|Any CPU.ActiveCfg = Release|Any CPU

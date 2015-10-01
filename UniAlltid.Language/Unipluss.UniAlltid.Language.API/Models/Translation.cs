@@ -21,5 +21,6 @@ namespace UniAlltid.Language.API.Models
         public string KeyId { get; set; }
         public string Value { get; set; }
         public string ValueEnglish { get; set; }
+        public string Language { get; set; }
     }
 }

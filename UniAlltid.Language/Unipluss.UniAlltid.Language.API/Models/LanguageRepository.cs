@@ -57,29 +57,48 @@ namespace UniAlltid.Language.API.Models
             });
         }
 
+        internal void CreateOrUpdateSingle(NewTranslation translation)
+        {
+            StringBuilder sql = new StringBuilder();
+
+            if (KeyAlreadyExists(translation.KeyId))
+            {
+                sql.AppendLine("update t_language set value = @value");
+                sql.AppendLine("where keyId = @keyId and lang = @language");
+            }
+            else
+            {
+                sql.AppendLine("insert into t_language");
+                sql.AppendLine("values((select max(id) + 1 from t_language), @keyid, @language, @value, null)");
+            }
+
+            _connection.Execute(sql.ToString(), new
+            {
+                value = translation.Value,
+                keyId = translation.KeyId,
+                language = translation.Language
+            });
+        }
+
         internal void Update(Translation translation, string selectedCustomer)
         {
             StringBuilder sql = new StringBuilder();
 
-            // if customer = "": update t_language set value = value where id = id
             if (String.IsNullOrEmpty(translation.Customer) && String.IsNullOrEmpty(selectedCustomer))
             {
                 sql.AppendFormat("update t_language set value = @value where id=@id");
                 _connection.Execute(sql.ToString(), new { value = translation.Value, id = translation.Id });
             }
             else if (!String.IsNullOrEmpty(translation.Customer))
-            {
-                // Get object with same keyid and language                            
+            {                          
                 sql.AppendLine("select * from t_language where keyid = @keyid and lang = @lang and IsNull(customer, '') = ''");
 
                 Translation defaultEntry =
                     _connection.Query<Translation>(sql.ToString(),
                         new { keyid = translation.KeyId, lang = translation.Lang }).First();
 
-                // Check if value = value. If yes, delete custom value entry in db (set to default value)
-                if (translation.Value == defaultEntry.Value)
+                if (translation.Value == defaultEntry.Value || String.IsNullOrEmpty(translation.Value))
                 {
-                    // delete lanaguage from db
                     sql = new StringBuilder();
                     sql.AppendLine("delete from t_language where id=@id");
                     _connection.Execute(sql.ToString(), new { id = translation.Id });
@@ -93,7 +112,6 @@ namespace UniAlltid.Language.API.Models
             }
             else
             {
-                // insert new custom
                 sql = new StringBuilder();
                 sql.AppendLine("insert into t_language");
                 sql.AppendLine("values((select max(id) + 1 from t_language), @keyid, @lang, @value, @customer)");
@@ -106,6 +124,14 @@ namespace UniAlltid.Language.API.Models
                     customer = selectedCustomer
                 });
             }
+        }
+
+        internal void Delete(int id)
+        {
+            StringBuilder sql = new StringBuilder();
+            sql.AppendLine("delete from t_language where id=@id");
+
+            _connection.Execute(sql.ToString(), new {id});
         }
 
         private IEnumerable<Translation> GetDefaultValues()

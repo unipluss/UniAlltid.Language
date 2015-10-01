@@ -21,7 +21,7 @@ namespace UniAlltid.Language.API.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("UniConnection", throwIfV1Schema: false)
         {
         }
         
