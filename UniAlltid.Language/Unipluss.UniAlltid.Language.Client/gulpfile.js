@@ -17,6 +17,7 @@ gulp.task('scripts', function () {
             'app/app.js',
             'common/common.services.js',
             'common/language.service.js',
+            'common/customer.service.js',
             'app/language/languages.controller.js'])
       .pipe(concat('main.js'))
         .pipe(rename({ suffix: '.min' }))

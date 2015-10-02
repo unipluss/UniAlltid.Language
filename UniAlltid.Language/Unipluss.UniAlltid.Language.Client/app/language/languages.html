@@ -9,8 +9,7 @@
 
             <div class="col-md-2">
                 <select class="form-control" ng-model="vm.customer" ng-change="vm.reloadData()">
-                    <option value="">Default values</option>
-                    <option value="sib">SiB</option>
+                    <option  ng-repeat="customer in vm.customers" value="">{{customer.name}}</option>
                 </select>
             </div>
             <div class="col-md-2">

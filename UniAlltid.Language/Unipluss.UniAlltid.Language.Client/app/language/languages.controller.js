@@ -2,9 +2,9 @@
     "use strict";
     angular
         .module("app")
-        .controller("LanguagesController", ["languageResource", "Notification", '$http', LanguagesController]);
+        .controller("LanguagesController", ["languageResource", "customerResource", "Notification", '$http', LanguagesController]);
 
-    function LanguagesController(languageResource, Notification, $http) {
+    function LanguagesController(languageResource, customerResource, Notification, $http) {
         var vm = this;
 
         vm.predicate = 'keyId';
@@ -23,6 +23,12 @@
         	}, function(error) {
         		Notification.error('Could not retrieve data from database');
 	        });
+        }
+
+        vm.getCustomers = function() {
+            customerResource.query(function(data) {
+                vm.customers = data;
+            });
         }
 
         vm.updateValue = function (language) {
@@ -75,6 +81,7 @@
                 $http.defaults.headers.common['X-AccessToken'] = vm.accessToken;
                 vm.hasToken = true;
                 vm.reloadData();
+                vm.getCustomers();
             }
         }
 

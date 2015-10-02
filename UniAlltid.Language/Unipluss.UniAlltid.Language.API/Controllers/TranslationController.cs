@@ -27,7 +27,7 @@ namespace UniAlltid.Language.API.Controllers
         }
 
         [HttpPost]
-        public void CreateOrUpdateSingle(NewTranslation translation)
+        public void CreateOrUpdateSingle(NewSingleTranslation translation)
         {
             _repo.CreateOrUpdateSingle(translation);
         }

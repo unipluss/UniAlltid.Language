@@ -14,10 +14,10 @@ namespace UniAlltid.Language.API
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
-    "Help Area",
-    "",
-    new { controller = "Help", action = "Index" }
-).DataTokens = new RouteValueDictionary(new { area = "HelpPage" });
+                "Help Area",
+                 "",
+                new { controller = "Help", action = "Index" }
+            ).DataTokens = new RouteValueDictionary(new { area = "HelpPage" });
         }
     }
 }

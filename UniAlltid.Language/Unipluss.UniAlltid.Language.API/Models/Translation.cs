@@ -16,11 +16,15 @@ namespace UniAlltid.Language.API.Models
         public string DefaultValue { get; set; }
     }
 
-    public class NewTranslation
+    public class NewTranslation : NewSingleTranslation
+    {
+        public string ValueEnglish { get; set; }
+    }
+
+    public class NewSingleTranslation
     {
         public string KeyId { get; set; }
         public string Value { get; set; }
-        public string ValueEnglish { get; set; }
         public string Language { get; set; }
     }
 }

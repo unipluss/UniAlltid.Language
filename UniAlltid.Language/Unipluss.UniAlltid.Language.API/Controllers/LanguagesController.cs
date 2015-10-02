@@ -48,5 +48,12 @@ namespace UniAlltid.Language.API.Controllers
         {
             _repo.Delete(id);
         }
+
+        [Route("customer")]
+        [HttpGet]
+        public IEnumerable<Customer> Get()
+        {
+            return _repo.RetrieveCustomers();
+        } 
     }
 }

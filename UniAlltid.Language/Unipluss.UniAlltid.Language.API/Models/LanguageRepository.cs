@@ -57,7 +57,7 @@ namespace UniAlltid.Language.API.Models
             });
         }
 
-        internal void CreateOrUpdateSingle(NewTranslation translation)
+        internal void CreateOrUpdateSingle(NewSingleTranslation translation)
         {
             StringBuilder sql = new StringBuilder();
 
@@ -133,6 +133,14 @@ namespace UniAlltid.Language.API.Models
 
             _connection.Execute(sql.ToString(), new {id});
         }
+
+        internal IEnumerable<Customer> RetrieveCustomers()
+        {
+            StringBuilder sql = new StringBuilder();
+            sql.AppendLine("select * from t_customer");
+
+            return _connection.Query<Customer>(sql.ToString());
+        } 
 
         private IEnumerable<Translation> GetDefaultValues()
         {
