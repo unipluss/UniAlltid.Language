@@ -10,7 +10,7 @@ namespace UniAlltid.Language.API.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Title = "Home Page";
+            ViewBag.Title = "Uni Alltid Language API";
 
             return View();
         }
