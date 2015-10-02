@@ -171,7 +171,9 @@ namespace UniAlltid.Language.API.Models
                 sql.AppendLine("where not l0.id in (");
                 sql.AppendLine("select l.id from t_language l");
                 sql.AppendLine("left join t_language l1 on l.keyid = l1.keyid and l.lang = l1.lang and l1.customer = @customer");
-                sql.AppendLine("where not l.id = l1.id )");
+                sql.AppendLine("where not l.id = l1.id ) and isNull(l0.customer, @customer) = @customer");
+
+
             }
 
             else
@@ -183,7 +185,7 @@ namespace UniAlltid.Language.API.Models
                 sql.AppendLine("select l.id from t_language l");
                 sql.AppendLine("left join t_language l1 on l.keyid = l1.keyid and l.lang = l1.lang and l1.customer = @customer");
                 sql.AppendLine("where not l.id = l1.id )");
-                sql.AppendLine("and l0.lang = @language");
+                sql.AppendLine("and isNull(l0.customer, @customer) = @customer and l0.lang = @language");
             }
 
             return _connection.Query<Translation>(sql.ToString(), new { customer, language }).ToList();

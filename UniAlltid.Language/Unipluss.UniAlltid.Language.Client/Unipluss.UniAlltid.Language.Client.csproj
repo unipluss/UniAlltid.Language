@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="common\common.services.js" />
+    <Content Include="common\customer.service.js" />
     <Content Include="common\language.service.js" />
     <Content Include="deploy\js\main.min.js" />
     <Content Include="packages.config" />
