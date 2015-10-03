@@ -10,6 +10,7 @@ using Autofac;
 using Autofac.Integration.WebApi;
 using Microsoft.Owin;
 using Owin;
+using NWebsec.Owin;
 using UniAlltid.Language.API.Controllers;
 
 [assembly: OwinStartup(typeof(UniAlltid.Language.API.Startup))]
@@ -32,6 +33,17 @@ namespace UniAlltid.Language.API
             // app.UseWebApi(config);    FY FY!
 
             ConfigureAuth(app);
+
+            app.UseHsts(options => options.MaxAge(days: 365));
+            app.UseXfo(options => options.SameOrigin());
+            app.UseXContentTypeOptions();
+            app.UseXDownloadOptions();
+            app.UseXXssProtection(options => options.EnabledWithBlockMode());
+
+            app.UseCsp(options => options
+                .DefaultSources(s => s.Self())
+                );
+
         }
 
         private void SetupAutofac(IAppBuilder app, HttpConfiguration config)

@@ -56,6 +56,7 @@ namespace UniAlltid.Language.API.Controllers
 
         [Route("customer")]
         [HttpGet]
+        [CacheOutput(ClientTimeSpan = 5 * 60, ServerTimeSpan = 5*60, ExcludeQueryStringFromCacheKey = false)]
         public IEnumerable<Customer> GetCustomer()
         {
             return _repo.RetrieveCustomers();
