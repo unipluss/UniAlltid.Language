@@ -11,7 +11,9 @@ using Autofac.Integration.WebApi;
 using Microsoft.Owin;
 using Owin;
 using NWebsec.Owin;
+using UniAlltid.Language.API.Code.Compression;
 using UniAlltid.Language.API.Controllers;
+using Unipluss.UniAlltid.Frontend.API.Code;
 
 [assembly: OwinStartup(typeof(UniAlltid.Language.API.Startup))]
 
@@ -24,6 +26,7 @@ namespace UniAlltid.Language.API
             HttpConfiguration config = new HttpConfiguration();
 
             config.MapHttpAttributeRoutes();
+            config.MessageHandlers.Insert(0, new CompressionHandler());
 
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["UniConnection"].ConnectionString);
             con.Open();
