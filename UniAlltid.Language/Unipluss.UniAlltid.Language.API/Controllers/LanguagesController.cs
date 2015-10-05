@@ -62,6 +62,7 @@ namespace UniAlltid.Language.API.Controllers
 
         [Route("customer")]
         [HttpPost]
+        [InvalidateCacheOutput("GetCustomer")]
         public void CreateCustomer(Customer customer)
         {
             _repo.CreateCustomer(customer);
