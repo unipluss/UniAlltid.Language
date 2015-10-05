@@ -1,9 +1,46 @@
 ﻿<div>
+    <div class="panel panel-primary" ng-show="vm.showAddNew">
+        <div class="panel-heading">
+            Add new entry
+        </div>
+        <div class="panel-body">
+            <div class="">
+                <form name="newEntryForm" class="form-horizontal" novalidate>
+                    <div class="form-group">
+                        <label for="newKeyId" class="col-sm-1 control-label">Key</label>
+                        <div class="col-sm-11">
+                            <input type="text" ng-model="vm.newKeyId" class="form-control" id="newKeyId" placeholder="Key" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="newValue" class="col-sm-1 control-label">Value</label>
+                        <div class="col-sm-11">
+                            <input type="text" ng-model="vm.newValue" class="form-control" id="newValue" placeholder="Norwegian" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="newValueEnglish" class="col-sm-1 control-label">Value</label>
+                        <div class="col-sm-11">
+                            <input type="text" ng-model="vm.newValueEnglish" class="form-control" id="newValueEnglish" placeholder="English" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label"></label>
+                        <div class="col-sm-11">
+                            <button class="pull-left btn btn-success" ng-disabled="newEntryForm.$invalid" ng-click="vm.createValue()">Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="panel panel-primary">
         <div class="panel-heading"
              style="font-size: large">
             Translations
         </div>
+        
 
         <div class="panel-body">
 
@@ -58,7 +95,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr dir-paginate="language in vm.languages | orderBy: vm.predicate : vm.reverse | filter: vm.searchText | itemsPerPage: 10">
+                <tr dir-paginate="language in vm.languages | orderBy: vm.predicate : vm.reverse | filter: vm.searchText | itemsPerPage: 25">
                     <td>{{ language.keyId }}</td>
                     <td><a href="#" editable-text="language.value" onbeforesave="vm.updateValue(language)">{{ language.value }}</a></td>
                     <td><img ng-src="Content/images/{{ language.lang }}.png"/></td>
@@ -69,42 +106,6 @@
             </table>
             <dir-pagination-controls></dir-pagination-controls>
             
-        </div>
-    </div>
-
-    <div class="panel panel-primary" ng-show="vm.showAddNew">
-        <div class="panel-heading">
-            Add new entry
-        </div>
-        <div class="panel-body">
-            <div class="">
-                <form name="newEntryForm" class="form-horizontal" novalidate>
-                    <div class="form-group">
-                        <label for="newKeyId" class="col-sm-1 control-label">Key</label>
-                        <div class="col-sm-11">
-                            <input type="text" ng-model="vm.newKeyId" class="form-control" id="newKeyId" placeholder="Key" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="newValue" class="col-sm-1 control-label">Value</label>
-                        <div class="col-sm-11">
-                            <input type="text" ng-model="vm.newValue" class="form-control" id="newValue" placeholder="Norwegian" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="newValueEnglish" class="col-sm-1 control-label">Value</label>
-                        <div class="col-sm-11">
-                            <input type="text" ng-model="vm.newValueEnglish" class="form-control" id="newValueEnglish" placeholder="English" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-1 control-label"></label>
-                        <div class="col-sm-11">
-                            <button class="pull-left btn btn-success" ng-disabled="newEntryForm.$invalid" ng-click="vm.createValue()">Save</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
         </div>
     </div>
 </div>

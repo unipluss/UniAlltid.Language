@@ -6,6 +6,10 @@
   text-align: center;
 }
 
+.main-content table {
+    text-align: left !important;
+}
+
 .pull-left {
     margin-right: 5px !important;
 }
