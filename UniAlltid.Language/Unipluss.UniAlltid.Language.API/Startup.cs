@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Reflection;
 using System.Web.Http;
 using Autofac;
 using Autofac.Integration.WebApi;
 using Microsoft.Owin;
-using Owin;
 using NWebsec.Owin;
+using Owin;
+using UniAlltid.Language.API;
 using UniAlltid.Language.API.Code.Compression;
-using UniAlltid.Language.API.Controllers;
-using Unipluss.UniAlltid.Frontend.API.Code;
+using UniAlltid.Language.API.Models;
 
-[assembly: OwinStartup(typeof(UniAlltid.Language.API.Startup))]
+[assembly: OwinStartup(typeof(Startup))]
 
 namespace UniAlltid.Language.API
 {
@@ -61,6 +58,9 @@ namespace UniAlltid.Language.API
                 con.Open();
                 return con;
             }).As<IDbConnection>().InstancePerRequest();
+
+
+            builder.RegisterType<LanguageRepository>().As<ILanguageRepository>().InstancePerRequest();
 
             IContainer container = builder.Build();
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);

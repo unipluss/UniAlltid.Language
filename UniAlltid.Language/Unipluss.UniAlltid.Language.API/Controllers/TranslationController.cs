@@ -1,24 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using System.Web.Http;
-using System.Web.Http.Cors;
-using UniAlltid.Language.API.Code;
 using UniAlltid.Language.API.Models;
 using WebApi.OutputCache.V2;
 
 namespace UniAlltid.Language.API.Controllers
-{
-    [EnableCors("*", "*", "*")]
-    [RoutePrefix("api/translation")]
-    [TokenAccessFilter]
-    public class TranslationController : ApiController
+{    
+    [RoutePrefix("api/translation")]    
+    public class TranslationController : BaseApiController
     {
-        private readonly LanguageRepository _repo;
         private const int serverCacheSeconds = (60 * 60 * 2);
 
-        public TranslationController(IDbConnection connection)
+
+        public TranslationController(IDbConnection connection, ILanguageRepository languageRepository) : base(connection, languageRepository)
         {
-            _repo = new LanguageRepository(connection);
         }
 
         [Route("{language}")]
@@ -26,14 +21,14 @@ namespace UniAlltid.Language.API.Controllers
         [CacheOutput(ClientTimeSpan = serverCacheSeconds, ServerTimeSpan = serverCacheSeconds, ExcludeQueryStringFromCacheKey = false)]
         public Dictionary<string, string> Get(string language, string customer = "")
         {
-            return _repo.RetrieveDictionary(language, customer);
+            return base._languageRepository.RetrieveDictionary(language, customer);
         }
 
         [HttpPost]
-        [InvalidateCacheOutput("Get")]
         public void CreateOrUpdateSingle(NewSingleTranslation translation)
         {
-            _repo.CreateOrUpdateSingle(translation);
+            base._languageRepository.CreateOrUpdateSingle(translation);
+            base.EmptyCache();
         }
     }
 }

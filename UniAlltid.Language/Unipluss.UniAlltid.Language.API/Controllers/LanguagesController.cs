@@ -1,38 +1,32 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using System.Web.Http;
-using System.Web.Http.Cors;
 using UniAlltid.Language.API.Code;
 using UniAlltid.Language.API.Models;
 using WebApi.OutputCache.V2;
 
 namespace UniAlltid.Language.API.Controllers
 {
-    [EnableCors("*", "*", "*")]
     [RoutePrefix("api/languages")]
-    [TokenAccessFilter]
-    public class LanguagesController : ApiController
+    public class LanguagesController : BaseApiController
     {
-        private readonly LanguageRepository _repo;
-   
-
-        public LanguagesController(IDbConnection connection)
+        public LanguagesController(IDbConnection connection, ILanguageRepository languageRepository) : base(connection, languageRepository)
         {
-            _repo = new LanguageRepository(connection);
         }
 
         [HttpGet]
         
         public IEnumerable<Translation> Get(string customer="", string language="")
         {
-            return _repo.Retrieve(customer, language);
+            return _languageRepository.Retrieve(customer, language);
         }
 
         [HttpPost]
         [InvalidateCacheOutput("Get", typeof(TranslationController))]
         public void Post([FromBody]NewTranslation translation)
         {
-            _repo.Create(translation);
+            _languageRepository.Create(translation);
+            base.EmptyCache();
         }
 
 
@@ -40,16 +34,16 @@ namespace UniAlltid.Language.API.Controllers
         [InvalidateCacheOutput("Get", typeof(TranslationController))]
         public void Put([FromBody]Translation translation, [FromUri] string selectedCustomer = "")
         {
-            _repo.Update(translation, selectedCustomer);
-            //var cache = Configuration.CacheOutputConfiguration().GetCacheOutputProvider(Request);
-            //cache.RemoveStartsWith(Configuration.CacheOutputConfiguration().MakeBaseCachekey((TranslationController t) => t.Get(null, null)));
+            _languageRepository.Update(translation, selectedCustomer);
+            base.EmptyCache();
         }
 
         [HttpDelete]
         [InvalidateCacheOutput("Get", typeof(TranslationController))]
         public void Delete(int id)
         {
-            _repo.Delete(id);
+            _languageRepository.Delete(id);
+            base.EmptyCache();
         }
 
         [Route("customer")]
@@ -57,7 +51,7 @@ namespace UniAlltid.Language.API.Controllers
         [CacheOutput(ClientTimeSpan = 5 * 60, ServerTimeSpan = 5*60, ExcludeQueryStringFromCacheKey = false)]
         public IEnumerable<Customer> GetCustomer()
         {
-            return _repo.RetrieveCustomers();
+            return _languageRepository.RetrieveCustomers();
         }
 
         [Route("customer")]
@@ -65,7 +59,7 @@ namespace UniAlltid.Language.API.Controllers
         [InvalidateCacheOutput("GetCustomer")]
         public void CreateCustomer(Customer customer)
         {
-            _repo.CreateCustomer(customer);
+            _languageRepository.CreateCustomer(customer);
         }
     }
 }

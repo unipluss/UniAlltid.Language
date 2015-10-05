@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace UniAlltid.Language.API.Models
 {
-    public class LanguageRepository
+    public class LanguageRepository : ILanguageRepository
     {
         private readonly IDbConnection _connection;
 
@@ -20,7 +20,7 @@ namespace UniAlltid.Language.API.Models
             _connection = connection;
         }
 
-        internal IEnumerable<Translation> Retrieve(string customer, string language)
+        public IEnumerable<Translation> Retrieve(string customer, string language)
         {
             if (String.IsNullOrEmpty(customer) && String.IsNullOrEmpty(language))
                 return GetDefaultValues();
@@ -29,7 +29,7 @@ namespace UniAlltid.Language.API.Models
                 return GetFilteredValues(customer, language);
         }
 
-        internal Dictionary<string, string> RetrieveDictionary(string language, string customer)
+        public Dictionary<string, string> RetrieveDictionary(string language, string customer)
         {
             var translations = GetFilteredValues(customer, language);
 
@@ -38,7 +38,7 @@ namespace UniAlltid.Language.API.Models
             return dict;
         }
 
-        internal void Create(NewTranslation translation)
+        public void Create(NewTranslation translation)
         {
             if(KeyAlreadyExists(translation.KeyId))
                 throw new Exception("Key already exists");
@@ -57,7 +57,7 @@ namespace UniAlltid.Language.API.Models
             });
         }
 
-        internal void CreateOrUpdateSingle(NewSingleTranslation translation)
+        public void CreateOrUpdateSingle(NewSingleTranslation translation)
         {
             StringBuilder sql = new StringBuilder();
 
@@ -80,7 +80,7 @@ namespace UniAlltid.Language.API.Models
             });
         }
 
-        internal void Update(Translation translation, string selectedCustomer)
+        public void Update(Translation translation, string selectedCustomer)
         {
             StringBuilder sql = new StringBuilder();
 
@@ -126,7 +126,7 @@ namespace UniAlltid.Language.API.Models
             }
         }
 
-        internal void Delete(int id)
+        public void Delete(int id)
         {
             StringBuilder sql = new StringBuilder();
             sql.AppendLine("delete from t_language where id=@id");
@@ -134,7 +134,7 @@ namespace UniAlltid.Language.API.Models
             _connection.Execute(sql.ToString(), new {id});
         }
 
-        internal IEnumerable<Customer> RetrieveCustomers()
+        public IEnumerable<Customer> RetrieveCustomers()
         {
             StringBuilder sql = new StringBuilder();
             sql.AppendLine("select * from t_customer");
@@ -142,7 +142,7 @@ namespace UniAlltid.Language.API.Models
             return _connection.Query<Customer>(sql.ToString());
         }
 
-        internal void CreateCustomer(Customer customer)
+        public void CreateCustomer(Customer customer)
         {
             StringBuilder sql = new StringBuilder();
 
@@ -158,7 +158,7 @@ namespace UniAlltid.Language.API.Models
 
         }
 
-        private IEnumerable<Translation> GetDefaultValues()
+        public IEnumerable<Translation> GetDefaultValues()
         {
             StringBuilder sql = new StringBuilder();
             sql.AppendLine("select * from t_language where isNull(customer, '') = ''");
@@ -166,7 +166,7 @@ namespace UniAlltid.Language.API.Models
             return _connection.Query<Translation>(sql.ToString()).ToList();
         }
 
-         private IEnumerable<Translation> GetFilteredValues(string customer, string language)
+        public IEnumerable<Translation> GetFilteredValues(string customer, string language)
         {
             StringBuilder sql = new StringBuilder();
 
@@ -207,7 +207,7 @@ namespace UniAlltid.Language.API.Models
             return _connection.Query<Translation>(sql.ToString(), new { customer, language }).ToList();
         }
 
-        private bool KeyAlreadyExists(string keyId)
+        public bool KeyAlreadyExists(string keyId)
         {
             var result = (int)_connection.ExecuteScalar("select count(*) from t_language where keyId = @keyId", new { keyId });
 
