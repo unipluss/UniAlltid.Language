@@ -25,12 +25,6 @@
 	        });
         }
 
-        vm.getCustomers = function() {
-            customerResource.query(function(data) {
-                vm.customers = data;
-            });
-        }
-
         vm.updateValue = function (language) {
 
         	language.$update({ selectedCustomer: vm.customer }, function (data) {
@@ -67,6 +61,28 @@
                 vm.reloadData();
             }, function(error) {
                 Notification.error('Could not delete entry from database');
+            });
+        }
+
+        vm.getCustomers = function () {
+            customerResource.query(function (data) {
+                vm.customers = data;
+            });
+        }
+
+        vm.createCustomer = function() {
+            var customer = new customerResource();
+
+            customer.id = vm.newCustomerId;
+            customer.name = vm.newCustomerName;
+
+            customer.$save(function(data) {
+                Notification.success('Added to database!');
+                vm.getCustomers();
+                vm.newCustomerId = '';
+                vm.newCustomerName = '';
+            }, function(error) {
+                Notification.error('Could not add customer to database');
             });
         }
 

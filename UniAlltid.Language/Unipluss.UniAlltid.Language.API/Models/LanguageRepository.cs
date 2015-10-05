@@ -140,7 +140,23 @@ namespace UniAlltid.Language.API.Models
             sql.AppendLine("select * from t_customer");
 
             return _connection.Query<Customer>(sql.ToString());
-        } 
+        }
+
+        internal void CreateCustomer(Customer customer)
+        {
+            StringBuilder sql = new StringBuilder();
+
+            sql.AppendLine("select count(*) from t_customer where id = @id");
+            var result = (int)_connection.ExecuteScalar(sql.ToString(), new {id = customer.Id});
+            if(result != 0)
+                throw new Exception("Customer with ID " + customer.Id + " already exists.");
+
+            sql = new StringBuilder();
+            sql.AppendLine("insert into t_customer values(@id, @name)");
+
+            _connection.Execute(sql.ToString(), new {id = customer.Id, name = customer.Name});
+
+        }
 
         private IEnumerable<Translation> GetDefaultValues()
         {

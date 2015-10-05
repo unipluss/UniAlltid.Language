@@ -1,75 +1,102 @@
-﻿<div>
-    <div class="panel panel-primary" ng-show="vm.showAddNew">
-        <div class="panel-heading">
-            Add new entry
-        </div>
-        <div class="panel-body">
-            <div class="">
-                <form name="newEntryForm" class="form-horizontal" novalidate>
-                    <div class="form-group">
-                        <label for="newKeyId" class="col-sm-1 control-label">Key</label>
-                        <div class="col-sm-11">
-                            <input type="text" ng-model="vm.newKeyId" class="form-control" id="newKeyId" placeholder="Key" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="newValue" class="col-sm-1 control-label">Value</label>
-                        <div class="col-sm-11">
-                            <input type="text" ng-model="vm.newValue" class="form-control" id="newValue" placeholder="Norwegian" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="newValueEnglish" class="col-sm-1 control-label">Value</label>
-                        <div class="col-sm-11">
-                            <input type="text" ng-model="vm.newValueEnglish" class="form-control" id="newValueEnglish" placeholder="English" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-1 control-label"></label>
-                        <div class="col-sm-11">
-                            <button class="pull-left btn btn-success" ng-disabled="newEntryForm.$invalid" ng-click="vm.createValue()">Save</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
+﻿<!-- Add new -->
+<div class="panel panel-primary" ng-show="vm.showAddNew">
+    <div class="panel-heading">
+        Add
     </div>
 
-    <div class="panel panel-primary">
-        <div class="panel-heading"
-             style="font-size: large">
-            Translations
-        </div>
-        
-
-        <div class="panel-body">
-
-            <div class="col-md-2">
-                <select class="form-control" ng-model="vm.customer" ng-change="vm.reloadData()">
-                    <option value="" selected="selected">Default values</option>
-                    <option ng-repeat="customer in vm.customers" value="{{customer.id}}">{{customer.id}}</option>
-                </select>
-            </div>
-            <div class="col-md-2">
-                <select class="form-control" ng-model="vm.language" ng-change="vm.reloadData()">
-                    <option value="">Language</option>
-                    <option value="no">Norwegian</option>
-                    <option value="en">English</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group has-feedback">
-                    <input type="text" class="form-control" ng-model="vm.searchText" placeholder="Search"/>
-                    <i class="glyphicon glyphicon-search form-control-feedback"></i>
+    <div class="panel-body">
+        <!-- New translation -->
+        <div class="col-md-6">
+            <h4>New translation</h4>
+            <form name="newEntryForm" class="form-horizontal" novalidate>
+                <div class="form-group">
+                    <label for="newKeyId" class="col-sm-1 control-label">Key</label>
+                    <div class="col-sm-11">
+                        <input type="text" ng-model="vm.newKeyId" class="form-control" id="newKeyId" placeholder="Key" required>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-2">
-                <a class="btn btn-default pull-left" ng-click="vm.showAddNew = !vm.showAddNew" title="New translation"><span class="glyphicon glyphicon-plus"></span> </a>
-            </div>
+                <div class="form-group">
+                    <label for="newValue" class="col-sm-1 control-label">Value</label>
+                    <div class="col-sm-11">
+                        <input type="text" ng-model="vm.newValue" class="form-control" id="newValue" placeholder="Norwegian" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="newValueEnglish" class="col-sm-1 control-label">Value</label>
+                    <div class="col-sm-11">
+                        <input type="text" ng-model="vm.newValueEnglish" class="form-control" id="newValueEnglish" placeholder="English" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-11">
+                        <button class="pull-left btn btn-success" ng-disabled="newEntryForm.$invalid" ng-click="vm.createValue()">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- New customer -->
+        <div class="col-md-6">
+            <h4>New customer</h4>
+            <form name="newCustomerForm" class="form-horizontal" novalidate="">
+                <div class="form-group">
+                    <label for="newCustomerId" class="col-sm-1 control-label">Id</label>
+                    <div class="col-sm-11">
+                        <input type="text" ng-model="vm.newCustomerId" class="form-control" id="newCustomerId" placeholder="Id" required/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="newCustomerName" class="col-sm-1 control-label">Name</label>
+                    <div class="col-sm-11">
+                        <input type="text" ng-model="vm.newCustomerName" class="form-control" id="newCustomerName" placeholder="Name" required/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-11">
+                        <button class="pull-left btn btn-success" ng-disabled="newCustomerForm.$invalid" ng-click="vm.createCustomer()">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
-            <table class="table table-hover table-responsive">
+<!-- Translation table -->
+<div class="panel panel-primary">
+    <div class="panel-heading"
+         style="font-size: large">
+        Translations
+    </div>
 
-                <thead>
+    <div class="panel-body">
+
+        <div class="col-md-2">
+            <select class="form-control" ng-model="vm.customer" ng-change="vm.reloadData()">
+                <option value="" selected="selected">Default values</option>
+                <option ng-repeat="customer in vm.customers" value="{{customer.id}}">{{customer.id}}</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select class="form-control" ng-model="vm.language" ng-change="vm.reloadData()">
+                <option value="">Language</option>
+                <option value="no">Norwegian</option>
+                <option value="en">English</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group has-feedback">
+                <input type="text" class="form-control" ng-model="vm.searchText" placeholder="Search" />
+                <i class="glyphicon glyphicon-search form-control-feedback"></i>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <a class="btn btn-default pull-left" ng-click="vm.showAddNew = !vm.showAddNew" title="New translation"><span class="glyphicon glyphicon-plus"></span> </a>
+        </div>
+
+        <table class="table table-hover table-responsive">
+
+            <thead>
                 <tr>
                     <td>
                         <a href="#" ng-click="vm.order('keyId')">
@@ -93,19 +120,18 @@
                     </td>
                     <td></td>
                 </tr>
-                </thead>
-                <tbody>
+            </thead>
+            <tbody>
                 <tr dir-paginate="language in vm.languages | orderBy: vm.predicate : vm.reverse | filter: vm.searchText | itemsPerPage: 25">
                     <td>{{ language.keyId }}</td>
                     <td><a href="#" editable-text="language.value" onbeforesave="vm.updateValue(language)">{{ language.value }}</a></td>
-                    <td><img ng-src="Content/images/{{ language.lang }}.png"/></td>
+                    <td><img ng-src="Content/images/{{ language.lang }}.png" /></td>
                     <td>{{ language.defaultValue }}</td>
                     <td><a class="delete" href="#" ng-click="vm.deleteValue(language.id)" title="Delete this entry"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
                 </tr>
-                </tbody>
-            </table>
-            <dir-pagination-controls></dir-pagination-controls>
-            
-        </div>
+            </tbody>
+        </table>
+        <dir-pagination-controls></dir-pagination-controls>
+
     </div>
 </div>

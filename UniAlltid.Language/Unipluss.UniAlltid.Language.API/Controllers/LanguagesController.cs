@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
 using System.Web.Http;
 using System.Web.Http.Cors;
-using Dapper;
 using UniAlltid.Language.API.Code;
 using UniAlltid.Language.API.Models;
 using WebApi.OutputCache.V2;
@@ -45,6 +41,8 @@ namespace UniAlltid.Language.API.Controllers
         public void Put([FromBody]Translation translation, [FromUri] string selectedCustomer = "")
         {
             _repo.Update(translation, selectedCustomer);
+            //var cache = Configuration.CacheOutputConfiguration().GetCacheOutputProvider(Request);
+            //cache.RemoveStartsWith(Configuration.CacheOutputConfiguration().MakeBaseCachekey((TranslationController t) => t.Get(null, null)));
         }
 
         [HttpDelete]
@@ -60,6 +58,13 @@ namespace UniAlltid.Language.API.Controllers
         public IEnumerable<Customer> GetCustomer()
         {
             return _repo.RetrieveCustomers();
-        } 
+        }
+
+        [Route("customer")]
+        [HttpPost]
+        public void CreateCustomer(Customer customer)
+        {
+            _repo.CreateCustomer(customer);
+        }
     }
 }
