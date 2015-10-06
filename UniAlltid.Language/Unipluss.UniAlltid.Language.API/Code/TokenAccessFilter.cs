@@ -22,7 +22,15 @@ namespace UniAlltid.Language.API.Code
                     return continuation();
                 }
             }
-
+            else if (actionContext.Request.RequestUri.ParseQueryString() != null)
+            {
+                var queryValues = actionContext.Request.RequestUri.ParseQueryString();
+                var tokenvalue = queryValues["token"];
+                if (!string.IsNullOrWhiteSpace(tokenvalue) && tokenvalue.Equals(ConfigurationManager.AppSettings["token"]))
+                {
+                    return continuation();
+                }
+            }
 
             return Task.Factory.StartNew(() =>
             {
