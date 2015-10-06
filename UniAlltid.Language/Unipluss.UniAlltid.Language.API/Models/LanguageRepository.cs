@@ -199,8 +199,6 @@ namespace UniAlltid.Language.API.Models
                 sql.AppendLine("select l.id from t_language l");
                 sql.AppendLine("left join t_language l1 on l.keyid = l1.keyid and l.lang = l1.lang and l1.customer = @customer");
                 sql.AppendLine("where not l.id = l1.id ) and isNull(l0.customer, @customer) = @customer");
-
-
             }
 
             else
@@ -233,10 +231,9 @@ namespace UniAlltid.Language.API.Models
             sql.AppendLine("left join t_language l2 on l2.keyid = l1.keyid and l2.lang = 'en'");
             sql.AppendLine("and isNull(l2.customer, 'default') = isNull(l1.customer, 'default')");
             sql.AppendLine("where l1.lang = 'no'");
+            sql.AppendLine("order by l1.customer, l1.keyid");
 
             var result = _connection.Query<CsvTranslation>(sql.ToString()).ToList();
-
-            result.OrderBy(x => x.KeyId);
 
             return ConvertToCSV(result);
         } 
