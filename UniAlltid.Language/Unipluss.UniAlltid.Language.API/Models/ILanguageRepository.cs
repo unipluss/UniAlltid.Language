@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Net.Http;
 
 namespace UniAlltid.Language.API.Models
 {
@@ -12,6 +13,6 @@ namespace UniAlltid.Language.API.Models
         void Delete(int id);
         IEnumerable<Customer> RetrieveCustomers();
         void CreateCustomer(Customer customer);
-     
+        HttpResponseMessage ExportCSV();
     }
 }

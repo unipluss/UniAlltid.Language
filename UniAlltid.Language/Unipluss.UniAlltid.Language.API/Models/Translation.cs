@@ -27,4 +27,12 @@ namespace UniAlltid.Language.API.Models
         public string Value { get; set; }
         public string Language { get; set; }
     }
+
+    public class CsvTranslation
+    {
+        public string KeyId { get; set; }
+        public string Norwegian { get; set; }
+        public string English { get; set; }
+        public string Customer { get; set; }
+    }
 }

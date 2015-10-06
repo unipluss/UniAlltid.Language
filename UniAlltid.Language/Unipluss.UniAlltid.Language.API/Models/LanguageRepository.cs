@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
-using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
-using System.Web.Hosting;
 using Dapper;
-using Newtonsoft.Json;
 
 namespace UniAlltid.Language.API.Models
 {
@@ -158,7 +157,19 @@ namespace UniAlltid.Language.API.Models
 
         }
 
-        public IEnumerable<Translation> GetDefaultValues()
+        public HttpResponseMessage ExportCSV()
+        {
+            HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+            result.Content = new StringContent(GetDataToExport());
+
+            result.Content.Headers.ContentType = new MediaTypeHeaderValue("text/csv");
+            result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+            result.Content.Headers.ContentDisposition.FileName = "translations.csv";
+
+            return result;
+        }
+
+        private IEnumerable<Translation> GetDefaultValues()
         {
             StringBuilder sql = new StringBuilder();
             sql.AppendLine("select * from t_language where isNull(customer, '') = ''");
@@ -166,7 +177,7 @@ namespace UniAlltid.Language.API.Models
             return _connection.Query<Translation>(sql.ToString()).ToList();
         }
 
-        public IEnumerable<Translation> GetFilteredValues(string customer, string language)
+        private IEnumerable<Translation> GetFilteredValues(string customer, string language)
         {
             StringBuilder sql = new StringBuilder();
 
@@ -207,12 +218,43 @@ namespace UniAlltid.Language.API.Models
             return _connection.Query<Translation>(sql.ToString(), new { customer, language }).ToList();
         }
 
-        public bool KeyAlreadyExists(string keyId)
+        private bool KeyAlreadyExists(string keyId)
         {
             var result = (int)_connection.ExecuteScalar("select count(*) from t_language where keyId = @keyId", new { keyId });
 
             return result > 0;
         }
 
+        private string GetDataToExport()
+        {
+            StringBuilder sql = new StringBuilder();
+            sql.AppendLine("select l1.keyId as KeyId, l1.value as Norwegian, l2.value as English,");
+            sql.AppendLine("isNull(l1.customer, 'default') as Customer from t_language l1");
+            sql.AppendLine("left join t_language l2 on l2.keyid = l1.keyid and l2.lang = 'en'");
+            sql.AppendLine("and isNull(l2.customer, 'default') = isNull(l1.customer, 'default')");
+            sql.AppendLine("where l1.lang = 'no'");
+
+            var result = _connection.Query<CsvTranslation>(sql.ToString()).ToList();
+
+            result.OrderBy(x => x.KeyId);
+
+            return ConvertToCSV(result);
+        } 
+
+        private string ConvertToCSV(List<CsvTranslation> list)
+        {
+            var sb = new StringBuilder();
+            sb.Append("Key;Norwegian;English;Customer\r");
+
+            foreach (var field in list)
+            {
+                sb.AppendFormat("{0};{1};{2};{3}{4}", field.KeyId, field.Norwegian, field.English, field.Customer, "\r");
+            }
+            sb.AppendLine();
+
+            sb.Insert(0, '\uFEFF');
+
+            return sb.ToString();
+        }
     }
 }

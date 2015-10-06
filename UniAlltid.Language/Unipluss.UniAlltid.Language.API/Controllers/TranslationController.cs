@@ -9,7 +9,7 @@ namespace UniAlltid.Language.API.Controllers
     [RoutePrefix("api/translation")]    
     public class TranslationController : BaseApiController
     {
-        private const int serverCacheSeconds = (60 * 60 * 2);
+        private const int serverCacheSeconds = (60 * 60 * 24);
 
 
         public TranslationController(IDbConnection connection, ILanguageRepository languageRepository) : base(connection, languageRepository)

@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Web.Http;
 using UniAlltid.Language.API.Code;
 using UniAlltid.Language.API.Models;
@@ -15,7 +18,6 @@ namespace UniAlltid.Language.API.Controllers
         }
 
         [HttpGet]
-        
         public IEnumerable<Translation> Get(string customer="", string language="")
         {
             return _languageRepository.Retrieve(customer, language);
@@ -60,6 +62,13 @@ namespace UniAlltid.Language.API.Controllers
         public void CreateCustomer(Customer customer)
         {
             _languageRepository.CreateCustomer(customer);
+        }
+
+        [Route("export")]
+        [HttpGet]
+        public HttpResponseMessage GetCsv()
+        {
+            return _languageRepository.ExportCSV();
         }
     }
 }
