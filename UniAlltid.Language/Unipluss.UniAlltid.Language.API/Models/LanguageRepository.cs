@@ -125,6 +125,15 @@ namespace UniAlltid.Language.API.Models
             }
         }
 
+        public void UpdateKey(int id, string keyId)
+        {
+            StringBuilder sql = new StringBuilder();
+            sql.AppendLine("update t_language set keyId = @keyId");
+            sql.AppendLine("where keyId = (select top 1 keyId from t_language where id = @id)");
+
+            _connection.Execute(sql.ToString(), new {id, keyId});
+        }
+
         public void Delete(int id)
         {
             StringBuilder sql = new StringBuilder();

@@ -11,7 +11,8 @@
 	function languageResource($resource, appSettings) {
 		return $resource(appSettings.serverPath + "/api/languages/:id", null,
 		{
-		    'update': { method: 'PUT' }
+		    'update': { method: 'PUT' },
+            'updateKey': { method: 'PUT', url: appSettings.serverPath + '/api/languages/key' }
 		});
 	}
 })();

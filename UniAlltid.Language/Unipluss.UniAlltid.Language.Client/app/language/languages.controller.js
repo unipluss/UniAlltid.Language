@@ -25,8 +25,16 @@
 	        });
         }
 
-        vm.updateValue = function (language) {
+        vm.updateKeyId = function(language) {
+            language.$updateKey(function(data) {
+                Notification.success('Database updated!');
+                vm.reloadData();
+            }, function(error) {
+                Notification.error('Could not update key in database');
+            });
+        }
 
+        vm.updateValue = function (language) {
         	language.$update({ selectedCustomer: vm.customer }, function (data) {
         		Notification.success('Database updated!');
         		vm.reloadData();

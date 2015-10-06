@@ -10,6 +10,7 @@ namespace UniAlltid.Language.API.Models
         void Create(NewTranslation translation);
         void CreateOrUpdateSingle(NewSingleTranslation translation);
         void Update(Translation translation, string selectedCustomer);
+        void UpdateKey(int id, string keyId);
         void Delete(int id);
         IEnumerable<Customer> RetrieveCustomers();
         void CreateCustomer(Customer customer);

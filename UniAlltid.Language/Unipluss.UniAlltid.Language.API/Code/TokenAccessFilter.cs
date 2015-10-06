@@ -36,7 +36,7 @@ namespace UniAlltid.Language.API.Code
             {
                 var retur = new HttpResponseMessage(HttpStatusCode.Unauthorized)
                 {
-                    Content = new StringContent("This resource cannot be used without access token")
+                    Content = new StringContent("This resource cannot be used without the correct access token")
                 };
 
                 return retur;

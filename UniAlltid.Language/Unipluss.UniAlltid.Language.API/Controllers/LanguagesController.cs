@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Net;
 using System.Net.Http;
@@ -24,7 +25,6 @@ namespace UniAlltid.Language.API.Controllers
         }
 
         [HttpPost]
-        [InvalidateCacheOutput("Get", typeof(TranslationController))]
         public void Post([FromBody]NewTranslation translation)
         {
             _languageRepository.Create(translation);
@@ -33,15 +33,22 @@ namespace UniAlltid.Language.API.Controllers
 
 
         [HttpPut]
-        [InvalidateCacheOutput("Get", typeof(TranslationController))]
         public void Put([FromBody]Translation translation, [FromUri] string selectedCustomer = "")
         {
             _languageRepository.Update(translation, selectedCustomer);
             base.EmptyCache();
         }
 
+        [HttpPut]
+        [Route("key")]
+        public void UpdateKey([FromBody]Translation translation)
+        {
+            _languageRepository.UpdateKey(translation.Id, translation.KeyId);
+            base.EmptyCache();
+        }
+
+
         [HttpDelete]
-        [InvalidateCacheOutput("Get", typeof(TranslationController))]
         public void Delete(int id)
         {
             _languageRepository.Delete(id);
