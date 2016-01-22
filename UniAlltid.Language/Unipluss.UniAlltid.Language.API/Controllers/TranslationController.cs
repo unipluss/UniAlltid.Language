@@ -25,9 +25,17 @@ namespace UniAlltid.Language.API.Controllers
         }
 
         [HttpPost]
-        public void CreateOrUpdateSingle(NewSingleTranslation translation)
+        public void CreateOrUpdateSingle([FromBody]NewSingleTranslation translation)
         {
             base._languageRepository.CreateOrUpdateSingle(translation);
+            base.EmptyCache();
+        }
+
+        [Route("customer")]
+        [HttpPost]
+        public void UpdateCustomerKeys([FromBody]IEnumerable<NewSingleTranslation> translations, [FromUri]string customer)
+        {
+            base._languageRepository.UpdateCustomerKeys(translations, customer);
             base.EmptyCache();
         }
     }

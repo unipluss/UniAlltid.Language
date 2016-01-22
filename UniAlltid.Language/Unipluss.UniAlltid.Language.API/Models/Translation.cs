@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UniAlltid.Language.API.Models
+﻿namespace UniAlltid.Language.API.Models
 {
     public class Translation
     {
@@ -28,7 +22,7 @@ namespace UniAlltid.Language.API.Models
         public string Language { get; set; }
     }
 
-    public class CsvTranslation
+    public class ExternalTranslation
     {
         public string KeyId { get; set; }
         public string Norwegian { get; set; }

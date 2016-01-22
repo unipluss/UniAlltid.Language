@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using Dapper;
+using static System.String;
 
 namespace UniAlltid.Language.API.Models
 {
@@ -21,7 +22,7 @@ namespace UniAlltid.Language.API.Models
 
         public IEnumerable<Translation> Retrieve(string customer, string language)
         {
-            if (String.IsNullOrEmpty(customer) && String.IsNullOrEmpty(language))
+            if (IsNullOrEmpty(customer) && IsNullOrEmpty(language))
                 return GetDefaultValues();
 
             else
@@ -83,12 +84,12 @@ namespace UniAlltid.Language.API.Models
         {
             StringBuilder sql = new StringBuilder();
 
-            if (String.IsNullOrEmpty(translation.Customer) && String.IsNullOrEmpty(selectedCustomer))
+            if (IsNullOrEmpty(translation.Customer) && IsNullOrEmpty(selectedCustomer))
             {
                 sql.AppendFormat("update t_language set value = @value where id=@id");
                 _connection.Execute(sql.ToString(), new { value = translation.Value, id = translation.Id });
             }
-            else if (!String.IsNullOrEmpty(translation.Customer))
+            else if (!IsNullOrEmpty(translation.Customer))
             {                          
                 sql.AppendLine("select * from t_language where keyid = @keyid and lang = @lang and IsNull(customer, '') = ''");
 
@@ -96,7 +97,7 @@ namespace UniAlltid.Language.API.Models
                     _connection.Query<Translation>(sql.ToString(),
                         new { keyid = translation.KeyId, lang = translation.Lang }).First();
 
-                if (translation.Value == defaultEntry.Value || String.IsNullOrEmpty(translation.Value))
+                if (translation.Value == defaultEntry.Value || IsNullOrEmpty(translation.Value))
                 {
                     sql = new StringBuilder();
                     sql.AppendLine("delete from t_language where id=@id");
@@ -178,6 +179,36 @@ namespace UniAlltid.Language.API.Models
             return result;
         }
 
+        public void UpdateCustomerKeys(IEnumerable<NewSingleTranslation> translations, string customer)
+        {
+            foreach (var translation in translations)
+            {
+                var sql = new StringBuilder();
+
+                if (KeyAlreadyExists(translation.KeyId, customer, translation.Language))
+                {
+                    var defaultValue = GetDefaultValue(translation.KeyId, translation.Language);
+                    if (translation.Value == defaultValue.Value || IsNullOrEmpty(translation.Value))
+                    {
+                        sql.AppendLine("delete from t_language where keyId = @keyId and lang = @lang and customer = @customer");
+                        _connection.Execute(sql.ToString(), new {keyId = translation.KeyId, lang = translation.Language, customer});
+                    }
+                    else
+                    {
+                        sql.AppendLine("update t_language set value = @value where keyId = @keyId and lang = @lang and customer = @customer");
+                        _connection.Execute(sql.ToString(), new { value = translation.Value, keyId = translation.KeyId, lang = translation.Language, customer });
+                    }
+                }
+                else
+                {
+                    sql.AppendLine("insert into t_language (id, keyId, lang, value, customer)");
+                    sql.AppendLine("values((select max(id) + 1 from t_language), @keyId, @lang, @value, @customer)");
+
+                    _connection.Execute(sql.ToString(), new { value = translation.Value, keyId = translation.KeyId, lang = translation.Language, customer });
+                }
+            }
+        }
+
         private IEnumerable<Translation> GetDefaultValues()
         {
             StringBuilder sql = new StringBuilder();
@@ -186,11 +217,19 @@ namespace UniAlltid.Language.API.Models
             return _connection.Query<Translation>(sql.ToString()).ToList();
         }
 
+        private Translation GetDefaultValue(string key, string language)
+        {
+            StringBuilder sql = new StringBuilder();
+            sql.AppendLine("select * from t_language where keyId = @key and lang = @language and isNull(customer, '') = ''");
+
+            return _connection.Query<Translation>(sql.ToString(), new { key, language }).FirstOrDefault();
+        }
+
         private IEnumerable<Translation> GetFilteredValues(string customer, string language)
         {
             StringBuilder sql = new StringBuilder();
 
-            if (String.IsNullOrEmpty(customer))
+            if (IsNullOrEmpty(customer))
             {
                 // Get by language   
                 sql.AppendLine("select * from");
@@ -199,7 +238,7 @@ namespace UniAlltid.Language.API.Models
                 sql.AppendLine("and keyid not in (select keyid from t_language where lang = @language)) inni");
             }
 
-            else if (String.IsNullOrEmpty(language))
+            else if (IsNullOrEmpty(language))
             {
                 // Get by customer
                 sql.AppendLine("select l0.*, l2.value as DefaultValue from t_language l0");
@@ -225,9 +264,22 @@ namespace UniAlltid.Language.API.Models
             return _connection.Query<Translation>(sql.ToString(), new { customer, language }).ToList();
         }
 
-        private bool KeyAlreadyExists(string keyId)
+        private bool KeyAlreadyExists(string keyId, string customer = "", string language = "")
         {
-            var result = (int)_connection.ExecuteScalar("select count(*) from t_language where keyId = @keyId", new { keyId });
+            var sql = new StringBuilder();
+            sql.AppendLine("select count(*) from t_language where keyId = @keyId");
+
+            if (!IsNullOrEmpty(customer))
+            {
+                sql.AppendLine("and customer = @customer");
+            }
+
+            if (!IsNullOrEmpty(language))
+            {
+                sql.AppendLine("and lang = @language");
+            }
+
+            var result = (int)_connection.ExecuteScalar(sql.ToString(), new { keyId, customer, language });
 
             return result > 0;
         }
@@ -242,12 +294,12 @@ namespace UniAlltid.Language.API.Models
             sql.AppendLine("where l1.lang = 'no'");
             sql.AppendLine("order by l1.customer, l1.keyid");
 
-            var result = _connection.Query<CsvTranslation>(sql.ToString()).ToList();
+            var result = _connection.Query<ExternalTranslation>(sql.ToString()).ToList();
 
             return ConvertToCSV(result);
         } 
 
-        private string ConvertToCSV(List<CsvTranslation> list)
+        private string ConvertToCSV(List<ExternalTranslation> list)
         {
             var sb = new StringBuilder();
             sb.Append("Key;Norwegian;English;Customer\r");
