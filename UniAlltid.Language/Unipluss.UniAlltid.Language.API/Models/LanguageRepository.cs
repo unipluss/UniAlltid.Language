@@ -195,9 +195,10 @@ namespace UniAlltid.Language.API.Models
         {
             var sql = new StringBuilder();
 
+            var defaultValue = GetDefaultValue(keyId, language.ToString());
+
             if (KeyAlreadyExists(keyId, customer, language.ToString()))
             {
-                var defaultValue = GetDefaultValue(keyId, language.ToString());
                 if (value == defaultValue.Value || IsNullOrEmpty(value))
                 {
                     sql.AppendLine("delete from t_language where keyId = @keyId and lang = @lang and customer = @customer");
@@ -209,7 +210,7 @@ namespace UniAlltid.Language.API.Models
                     _connection.Execute(sql.ToString(), new { value, keyId, lang = language.ToString(), customer });
                 }
             }
-            else
+            else if (value != defaultValue.Value && !IsNullOrEmpty(value))
             {
                 sql.AppendLine("insert into t_language (id, keyId, lang, value, customer)");
                 sql.AppendLine("values((select max(id) + 1 from t_language), @keyId, @lang, @value, @customer)");
