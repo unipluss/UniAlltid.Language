@@ -183,8 +183,11 @@ namespace UniAlltid.Language.API.Models
         {
             foreach (var translation in translations)
             {
-                UpdateCustomerKey(translation.KeyId, translation.Norwegian, customer, Language.NO);
-                UpdateCustomerKey(translation.KeyId, translation.English, customer, Language.EN);
+                if (!IsNullOrEmpty(translation.Norwegian))
+                    UpdateCustomerKey(translation.KeyId, translation.Norwegian, customer, Language.NO);
+
+                if (!IsNullOrEmpty(translation.English))
+                    UpdateCustomerKey(translation.KeyId, translation.English, customer, Language.EN);
             }
         }
 
