@@ -179,33 +179,38 @@ namespace UniAlltid.Language.API.Models
             return result;
         }
 
-        public void UpdateCustomerKeys(IEnumerable<NewSingleTranslation> translations, string customer)
+        public void UpdateCustomerKeys(IEnumerable<ExternalTranslation> translations, string customer)
         {
             foreach (var translation in translations)
             {
-                var sql = new StringBuilder();
+                UpdateCustomerKey(translation.KeyId, translation.Norwegian, customer, Language.NO);
+                UpdateCustomerKey(translation.KeyId, translation.English, customer, Language.EN);
+            }
+        }
 
-                if (KeyAlreadyExists(translation.KeyId, customer, translation.Language))
+        private void UpdateCustomerKey(string keyId, string value, string customer, Language language)
+        {
+            var sql = new StringBuilder();
+
+            if (KeyAlreadyExists(keyId, customer, language.ToString()))
+            {
+                var defaultValue = GetDefaultValue(keyId, language.ToString());
+                if (value == defaultValue.Value || IsNullOrEmpty(value))
                 {
-                    var defaultValue = GetDefaultValue(translation.KeyId, translation.Language);
-                    if (translation.Value == defaultValue.Value || IsNullOrEmpty(translation.Value))
-                    {
-                        sql.AppendLine("delete from t_language where keyId = @keyId and lang = @lang and customer = @customer");
-                        _connection.Execute(sql.ToString(), new {keyId = translation.KeyId, lang = translation.Language, customer});
-                    }
-                    else
-                    {
-                        sql.AppendLine("update t_language set value = @value where keyId = @keyId and lang = @lang and customer = @customer");
-                        _connection.Execute(sql.ToString(), new { value = translation.Value, keyId = translation.KeyId, lang = translation.Language, customer });
-                    }
+                    sql.AppendLine("delete from t_language where keyId = @keyId and lang = @lang and customer = @customer");
+                    _connection.Execute(sql.ToString(), new { keyId, lang = language.ToString(), customer });
                 }
                 else
                 {
-                    sql.AppendLine("insert into t_language (id, keyId, lang, value, customer)");
-                    sql.AppendLine("values((select max(id) + 1 from t_language), @keyId, @lang, @value, @customer)");
-
-                    _connection.Execute(sql.ToString(), new { value = translation.Value, keyId = translation.KeyId, lang = translation.Language, customer });
+                    sql.AppendLine("update t_language set value = @value where keyId = @keyId and lang = @lang and customer = @customer");
+                    _connection.Execute(sql.ToString(), new { value, keyId, lang = language.ToString(), customer });
                 }
+            }
+            else
+            {
+                sql.AppendLine("insert into t_language (id, keyId, lang, value, customer)");
+                sql.AppendLine("values((select max(id) + 1 from t_language), @keyId, @lang, @value, @customer)");
+                _connection.Execute(sql.ToString(), new { value, keyId, lang = language.ToString(), customer });
             }
         }
 

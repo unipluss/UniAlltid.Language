@@ -29,4 +29,10 @@
         public string English { get; set; }
         public string Customer { get; set; }
     }
+
+    public enum Language
+    {
+        NO,
+        EN
+    }
 }
