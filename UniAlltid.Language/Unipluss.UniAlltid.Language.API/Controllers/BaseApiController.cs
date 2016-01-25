@@ -8,7 +8,7 @@ using WebApi.OutputCache.V2;
 namespace UniAlltid.Language.API.Controllers
 {
     [EnableCors("*", "*", "*")]
-   // [TokenAccessFilter]
+    [TokenAccessFilter]
     public class BaseApiController : ApiController
     {
         private readonly IDbConnection _connection;
