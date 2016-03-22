@@ -33,9 +33,9 @@ namespace UniAlltid.Language.API.Controllers
 
         [Route("customer")]
         [HttpPost]
-        public void UpdateCustomerKeys([FromBody]IEnumerable<ExternalTranslation> translations, [FromUri]string customer)
+        public void UpdateCustomerKeys([FromBody]UpdateExternalTranslationRequest request)
         {
-            base._languageRepository.UpdateCustomerKeys(translations, customer);
+            base._languageRepository.UpdateCustomerKeys(request.Translations, request.Customer, request.UpdatedBy);
             base.EmptyCache();
         }
     }

@@ -82,6 +82,8 @@ namespace UniAlltid.Language.API.Models
 
         public void Update(Translation translation, string selectedCustomer)
         {
+            LogChange(translation.KeyId, translation.Lang, translation.Value, selectedCustomer, "Dev");
+
             StringBuilder sql = new StringBuilder();
 
             if (IsNullOrEmpty(translation.Customer) && IsNullOrEmpty(selectedCustomer))
@@ -179,20 +181,22 @@ namespace UniAlltid.Language.API.Models
             return result;
         }
 
-        public void UpdateCustomerKeys(IEnumerable<ExternalTranslation> translations, string customer)
+        public void UpdateCustomerKeys(IEnumerable<ExternalTranslation> translations, string customer, string updatedBy)
         {
             foreach (var translation in translations)
             {
                 if (translation.Norwegian != null)
-                    UpdateCustomerKey(translation.KeyId, translation.Norwegian, customer, Language.NO);
+                    UpdateCustomerKey(translation.KeyId, translation.Norwegian, customer, Language.NO, updatedBy);
 
                 if (translation.English != null)
-                    UpdateCustomerKey(translation.KeyId, translation.English, customer, Language.EN);
+                    UpdateCustomerKey(translation.KeyId, translation.English, customer, Language.EN, updatedBy);
             }
         }
 
-        private void UpdateCustomerKey(string keyId, string value, string customer, Language language)
+        private void UpdateCustomerKey(string keyId, string value, string customer, Language language, string updatedBy)
         {
+            LogChange(keyId, language.ToString(), value, customer, updatedBy);
+
             var sql = new StringBuilder();
 
             var defaultValue = GetDefaultValue(keyId, language.ToString());
@@ -322,6 +326,23 @@ namespace UniAlltid.Language.API.Models
             sb.Insert(0, '\uFEFF');
 
             return sb.ToString();
+        }
+
+        private void LogChange(string keyId, string lang, string value, string customer, string updatedBy)
+        {
+            if (IsNullOrEmpty(value))
+                value = GetDefaultValue(keyId, lang).Value;
+
+            StringBuilder sql = new StringBuilder();
+            sql.AppendLine("insert into t_history (keyId, lang, oldValue, newValue, timestamp, customer, updatedBy)");
+            sql.AppendLine("values(@keyId, @lang,");
+            sql.AppendLine("(select case when len(l1.value) > 0 then l1.value else  l.value end from t_language l");
+            sql.AppendLine("left join t_language l1 on l.keyId = l1.keyId and l1.lang = l.lang  and isNull(l1.customer, '') = @customer");
+            sql.AppendLine("where l.keyId = @keyId and l.lang = @lang and l.customer is null),");
+            sql.AppendLine("@newValue, getdate(), NULLIF(@customer, ''), @updatedBy)");
+
+            _connection.Execute(sql.ToString(),
+                new {keyId, lang, newValue = value, customer, updatedBy});
         }
     }
 }

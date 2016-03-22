@@ -15,6 +15,6 @@ namespace UniAlltid.Language.API.Models
         IEnumerable<Customer> RetrieveCustomers();
         void CreateCustomer(Customer customer);
         HttpResponseMessage ExportCSV();
-        void UpdateCustomerKeys(IEnumerable<ExternalTranslation> translations, string customer);
+        void UpdateCustomerKeys(IEnumerable<ExternalTranslation> translations, string customer, string updatedBy);
     }
 }

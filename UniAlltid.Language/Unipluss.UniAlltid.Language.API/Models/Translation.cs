@@ -1,4 +1,6 @@
-﻿namespace UniAlltid.Language.API.Models
+﻿using System.Collections.Generic;
+
+namespace UniAlltid.Language.API.Models
 {
     public class Translation
     {
@@ -34,5 +36,12 @@
     {
         NO,
         EN
+    }
+
+    public class UpdateExternalTranslationRequest
+    {
+        public IEnumerable<ExternalTranslation> Translations { get; set; }
+        public string Customer { get; set; }
+        public string UpdatedBy { get; set; }
     }
 }
