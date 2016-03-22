@@ -270,6 +270,7 @@
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ILanguageRepository.cs" />
+    <Compile Include="Models\Log.cs" />
     <Compile Include="Models\Translation.cs" />
     <Compile Include="Models\LanguageRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

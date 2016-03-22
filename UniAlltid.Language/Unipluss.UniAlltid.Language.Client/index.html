@@ -21,12 +21,18 @@
     <link href="Content/angular-ui-notification.min.css" rel="stylesheet" />
 </head>
 
-<body ng-app="app" ng-controller="LanguagesController as vm">
+<body ng-app="app" ng-controller="MainController as vm">
 
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">Language Management</a>
+            <a class="navbar-brand" href="#translations">Language Management</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="#translations">Translations</a></li>
+                <li><a href="#logs">Logs</a></li>
+            </ul>
         </div>
     </div>
 </nav>
@@ -34,7 +40,7 @@
 
 <div class="container main-content">
         <!-- Login -->
-    <div class="row ng-cloak" ng-hide="vm.hasToken">
+    <div class="row ng-cloak" ng-if="!vm.hasToken">
         <div class="col-md-4 col-md-offset-4">
             <form class="form-signin" novalidate>
                 <h2>Token</h2>
@@ -44,7 +50,8 @@
         </div>
     </div>
         <!-- Language table -->
-        <div ng-include="'app/language/languages.html'" ng-hide="!vm.hasToken"></div>
+    <!--<div ng-include="'app/language/languages.html'" ng-hide="!vm.hasToken"></div>-->
+    <div ng-view ng-if="vm.hasToken"></div>
     </div>
 
     <script src="deploy/js/main.min.js"></script>

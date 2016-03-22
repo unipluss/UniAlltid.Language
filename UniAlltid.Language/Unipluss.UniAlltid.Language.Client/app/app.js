@@ -2,8 +2,27 @@
     "use strict";
 
     var app = angular.module("app",
-                            ["common.services", "xeditable", 'ui-notification', 'angularUtils.directives.dirPagination']);
+                            ["ngRoute", "common.services", "xeditable", 'ui-notification', 'angularUtils.directives.dirPagination']);
 
+    app.config(['$routeProvider', function($routeProvider) {
+
+        $routeProvider
+            .when('/translations', {
+                templateUrl: 'app/language/languages.html',
+                controller: 'LanguagesController',
+                controllerAs: 'vm'
+            })
+            
+            .when('/logs', {
+                templateUrl: 'app/logs/logs.html',
+                controller: 'LogsController',
+                controllerAs: 'vm'
+            })
+
+            .otherwise('/translations')
+        ;
+
+    }]);
 
     app.run(['editableOptions', '$http', function (editableOptions, $http) {
         editableOptions.theme = 'bs3';

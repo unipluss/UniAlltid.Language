@@ -10,6 +10,7 @@ gulp.task('scripts', function () {
             ['Scripts/jquery-1.9.1.min.js',
             'Scripts/bootstrap.min.js',
             'Scripts/angular.min.js',
+			'Scripts/angular-route.min.js',
             'Scripts/angular-resource.min.js',
             'Scripts/xeditable.min.js',
             'Scripts/angular-ui-notification.min.js',
@@ -18,7 +19,10 @@ gulp.task('scripts', function () {
             'common/common.services.js',
             'common/language.service.js',
             'common/customer.service.js',
-            'app/language/languages.controller.js'])
+			'common/log.service.js',
+			'app/main.controller.js',
+            'app/language/languages.controller.js',
+			'app/logs/logs.controller.js'])
       .pipe(concat('main.js'))
         .pipe(rename({ suffix: '.min' }))
         .pipe(uglify())

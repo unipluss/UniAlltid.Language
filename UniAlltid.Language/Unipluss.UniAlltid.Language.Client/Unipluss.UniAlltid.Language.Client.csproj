@@ -66,6 +66,8 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\logs\logs.html" />
+    <Content Include="app\main.controller.js" />
     <Content Include="common\common.services.js" />
     <Content Include="common\customer.service.js" />
     <Content Include="common\language.service.js" />

@@ -77,5 +77,12 @@ namespace UniAlltid.Language.API.Controllers
         {
             return _languageRepository.ExportCSV();
         }
+
+        [Route("logs")]
+        [HttpGet]
+        public IEnumerable<Log> GetLogs()
+        {
+            return _languageRepository.GetLogs();
+        }
     }
 }

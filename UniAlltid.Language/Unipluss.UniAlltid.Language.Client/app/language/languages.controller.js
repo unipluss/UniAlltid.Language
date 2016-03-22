@@ -2,15 +2,14 @@
     "use strict";
     angular
         .module("app")
-        .controller("LanguagesController", ["languageResource", "customerResource", "Notification", '$http', LanguagesController]);
+        .controller("LanguagesController", ["languageResource", "customerResource", "Notification", LanguagesController]);
 
-    function LanguagesController(languageResource, customerResource, Notification, $http) {
+    function LanguagesController(languageResource, customerResource, Notification) {
         var vm = this;
 
         vm.predicate = 'keyId';
         vm.reverse = false;
         vm.showAddNew = false;
-        vm.hasToken = false;
 
         vm.order = function(predicate) {
         	vm.reverse = (vm.predicate === predicate) ? !vm.reverse : false;
@@ -94,21 +93,7 @@
             });
         }
 
-        vm.setToken = function() {
-            localStorage.setItem('accessToken', vm.accessToken);
-            vm.getToken();
-        }
-
-        vm.getToken = function() {
-            vm.accessToken = localStorage.getItem('accessToken');
-            if (vm.accessToken !== null) {
-                $http.defaults.headers.common['X-AccessToken'] = vm.accessToken;
-                vm.hasToken = true;
-                vm.reloadData();
-                vm.getCustomers();
-            }
-        }
-
-        vm.getToken();
+        vm.reloadData();
+        vm.getCustomers();
     }
 }());

@@ -193,6 +193,14 @@ namespace UniAlltid.Language.API.Models
             }
         }
 
+        public IEnumerable<Log> GetLogs()
+        {
+            StringBuilder sql = new StringBuilder();
+            sql.AppendLine("select top 500 * from t_history");
+
+            return _connection.Query<Log>(sql.ToString()).ToList();
+        }
+
         private void UpdateCustomerKey(string keyId, string value, string customer, Language language, string updatedBy)
         {
             LogChange(keyId, language.ToString(), value, customer, updatedBy);

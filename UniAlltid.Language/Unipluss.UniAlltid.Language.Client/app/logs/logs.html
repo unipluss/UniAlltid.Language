@@ -1,0 +1,56 @@
+﻿<div class="panel panel-primary">
+    <div class="panel-heading"
+         style="font-size: large">
+        Logs
+    </div>
+
+    <div class="panel-body">
+        <div class="col-md-4">
+            <div class="form-group has-feedback">
+                <input type="text" class="form-control" ng-model="vm.searchText" placeholder="Search" />
+                <i class="glyphicon glyphicon-search form-control-feedback"></i>
+            </div>
+        </div>
+
+        <table class="table table-hover table-responsive">
+
+            <thead>
+                <tr>
+                    <td>
+                        <strong>Key</strong>
+                    </td>
+                    <td>
+                        <strong>Old value</strong>
+                    </td>
+                    <td>
+                        <strong>New value</strong>
+                    </td>
+                    <td>
+                        <strong>Language</strong>
+                    </td>
+                    <td>
+                        <strong>Customer</strong>
+                    </td>
+                    <td>
+                        <strong>Timestamp</strong>
+                    </td>
+                    <td>
+                        <strong>Updated by</strong>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr dir-paginate="log in vm.logs | orderBy: '-timestamp' | filter: vm.searchText | itemsPerPage: 25">
+                    <td>{{log.keyId}}</td>
+                    <td>{{log.oldValue}}</td>
+                    <td>{{log.newValue}}</td>
+                    <td><img ng-src="Content/images/{{ log.lang }}.png" /></td>
+                    <td>{{log.customer}}</td>
+                    <td>{{log.timestamp | date: 'dd.MM.yyyy HH:mm'}}</td>
+                    <td>{{log.updatedBy}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <dir-pagination-controls></dir-pagination-controls>      
+    </div>
+</div>
