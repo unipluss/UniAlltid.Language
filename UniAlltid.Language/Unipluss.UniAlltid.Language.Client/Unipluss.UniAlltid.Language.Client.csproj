@@ -71,6 +71,7 @@
     <Content Include="common\common.services.js" />
     <Content Include="common\customer.service.js" />
     <Content Include="common\language.service.js" />
+    <Content Include="Content\images\loader.gif" />
     <Content Include="deploy\js\main.min.js" />
     <Content Include="favicon.ico" />
     <Content Include="error.html" />
