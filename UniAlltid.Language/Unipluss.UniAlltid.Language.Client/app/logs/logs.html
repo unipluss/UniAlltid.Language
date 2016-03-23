@@ -7,12 +7,16 @@
     <div class="panel-body">
         <div class="col-md-4">
             <div class="form-group has-feedback">
-                <input type="text" class="form-control" ng-model="vm.searchText" placeholder="Search" />
+                <input type="text" class="form-control" ng-model="vm.searchText" placeholder="Search"/>
                 <i class="glyphicon glyphicon-search form-control-feedback"></i>
             </div>
         </div>
 
-        <table class="table table-hover table-responsive">
+        <div class="col-md-12 row" ng-show="vm.loading">
+            <img src="../../Content/images/loader.gif" />
+        </div>
+
+        <table class="table table-hover table-responsive" ng-hide="vm.loading">
 
             <thead>
                 <tr>

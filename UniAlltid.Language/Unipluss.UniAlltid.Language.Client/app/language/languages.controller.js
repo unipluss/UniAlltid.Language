@@ -16,11 +16,15 @@
         	vm.predicate = predicate;
         }
 
-        vm.reloadData = function() {
+        vm.reloadData = function () {
+            vm.loading = true;
+
         	languageResource.query({ customer: vm.customer, language: vm.language }, function (data) {
-        		vm.languages = data;
-        	}, function(error) {
-        		Notification.error('Could not retrieve data from database');
+        	    vm.languages = data;
+	            vm.loading = false;
+	        }, function(error) {
+	            Notification.error('Could not retrieve data from database');
+	            vm.loading = false;
 	        });
         }
 

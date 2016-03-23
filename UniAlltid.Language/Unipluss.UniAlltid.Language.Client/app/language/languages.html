@@ -42,13 +42,13 @@
                 <div class="form-group">
                     <label for="newCustomerId" class="col-sm-1 control-label">Id</label>
                     <div class="col-sm-11">
-                        <input type="text" ng-model="vm.newCustomerId" class="form-control" id="newCustomerId" placeholder="Id" required/>
+                        <input type="text" ng-model="vm.newCustomerId" class="form-control" id="newCustomerId" placeholder="Id" required />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="newCustomerName" class="col-sm-1 control-label">Name</label>
                     <div class="col-sm-11">
-                        <input type="text" ng-model="vm.newCustomerName" class="form-control" id="newCustomerName" placeholder="Name" required/>
+                        <input type="text" ng-model="vm.newCustomerName" class="form-control" id="newCustomerName" placeholder="Name" required />
                     </div>
                 </div>
                 <div class="form-group">
@@ -70,7 +70,6 @@
     </div>
 
     <div class="panel-body">
-
         <div class="col-md-2">
             <select class="form-control" ng-model="vm.customer" ng-change="vm.reloadData()">
                 <option value="" selected="selected">Default values</option>
@@ -97,27 +96,31 @@
             </a>
         </div>
 
-        <table class="table table-hover table-responsive">
+        <div class="col-md-12 row" ng-show="vm.loading">
+            <img src="../../Content/images/loader.gif" />
+        </div>
+
+        <table class="table table-hover table-responsive" ng-hide="vm.loading">
 
             <thead>
                 <tr>
                     <td>
-                        <a href="#" ng-click="vm.order('keyId')">
+                        <a href="javascript:void(0);" ng-click="vm.order('keyId')">
                             <strong>Key</strong>
                         </a>
                     </td>
                     <td>
-                        <a href="#" ng-click="vm.order('value')">
+                        <a href="javascript:void(0);" ng-click="vm.order('value')">
                             <strong>Value</strong>
                         </a>
                     </td>
                     <td>
-                        <a href="#" ng-click="vm.order('lang')">
+                        <a href="javascript:void(0);" ng-click="vm.order('lang')">
                             <strong>Language</strong>
                         </a>
                     </td>
                     <td>
-                        <a href="#" ng-click="vm.order('customer')">
+                        <a href="javascript:void(0);" ng-click="vm.order('customer')">
                             <strong>Default value</strong>
                         </a>
                     </td>
