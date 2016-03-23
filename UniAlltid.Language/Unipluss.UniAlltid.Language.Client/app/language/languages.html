@@ -100,43 +100,45 @@
             <img ng-src="Content/images/loader.gif" />
         </div>
 
-        <table class="table table-hover table-responsive" ng-hide="vm.loading">
+        <div ng-hide="vm.loading">
+            <table class="table table-hover table-responsive">
 
-            <thead>
-                <tr>
-                    <td>
-                        <a href="javascript:void(0);" ng-click="vm.order('keyId')">
-                            <strong>Key</strong>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="javascript:void(0);" ng-click="vm.order('value')">
-                            <strong>Value</strong>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="javascript:void(0);" ng-click="vm.order('lang')">
-                            <strong>Language</strong>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="javascript:void(0);" ng-click="vm.order('customer')">
-                            <strong>Default value</strong>
-                        </a>
-                    </td>
-                    <td></td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr dir-paginate="language in vm.languages | orderBy: vm.predicate : vm.reverse | filter: vm.searchText | itemsPerPage: 25">
-                    <td><a href="#" editable-text="language.keyId" onbeforesave="vm.updateKeyId(language)">{{ language.keyId }}</a></td>
-                    <td><a href="#" editable-textarea="language.value" e-cols="40" onbeforesave="vm.updateValue(language)">{{ language.value }}</a></td>
-                    <td><img ng-src="Content/images/{{ language.lang }}.png" /></td>
-                    <td>{{ language.defaultValue }}</td>
-                    <td><a class="delete" href="#" ng-click="vm.deleteValue(language.id)" title="Delete this entry"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
-                </tr>
-            </tbody>
-        </table>
-        <dir-pagination-controls></dir-pagination-controls>
+                <thead>
+                    <tr>
+                        <td>
+                            <a href="javascript:void(0);" ng-click="vm.order('keyId')">
+                                <strong>Key</strong>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="javascript:void(0);" ng-click="vm.order('value')">
+                                <strong>Value</strong>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="javascript:void(0);" ng-click="vm.order('lang')">
+                                <strong>Language</strong>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="javascript:void(0);" ng-click="vm.order('customer')">
+                                <strong>Default value</strong>
+                            </a>
+                        </td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr dir-paginate="language in vm.languages | orderBy: vm.predicate : vm.reverse | filter: vm.searchText | itemsPerPage: 25">
+                        <td><a href="#" editable-text="language.keyId" onbeforesave="vm.updateKeyId(language)">{{ language.keyId }}</a></td>
+                        <td><a href="#" editable-textarea="language.value" e-cols="40" onbeforesave="vm.updateValue(language)">{{ language.value }}</a></td>
+                        <td><img ng-src="Content/images/{{ language.lang }}.png" /></td>
+                        <td>{{ language.defaultValue }}</td>
+                        <td><a class="delete" href="#" ng-click="vm.deleteValue(language.id)" title="Delete this entry"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+                    </tr>
+                </tbody>
+            </table>
+            <dir-pagination-controls></dir-pagination-controls>
+        </div>
     </div>
 </div>
