@@ -38,5 +38,12 @@ namespace UniAlltid.Language.API.Controllers
             base._languageRepository.UpdateCustomerKeys(request.Translations, request.Customer, request.UpdatedBy);
             base.EmptyCache();
         }
+
+        [Route("keys")]
+        [HttpGet]
+        public IEnumerable<ExternalTranslation> GetTranslationsByKey([FromUri]IEnumerable<string> keyIds, string customer = "")
+        {
+            return base._languageRepository.RetrieveExternalTranslations(keyIds, customer);
+        } 
     }
 }

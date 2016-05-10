@@ -193,6 +193,20 @@ namespace UniAlltid.Language.API.Models
             }
         }
 
+        public IEnumerable<ExternalTranslation> RetrieveExternalTranslations(IEnumerable<string> keyIds, string customer = "")
+        {
+            StringBuilder sql = new StringBuilder();
+            sql.AppendLine("select distinct l.KeyId, isNull(ln.Value, lnd.Value) as Norwegian, isNull(le.value, led.value) as English");
+            sql.AppendLine("from t_language l");
+            sql.AppendLine("left join t_language ln on l.keyId = ln.keyId and ln.lang = 'no' and isNull(ln.customer, '') = @customer");
+            sql.AppendLine("left join t_language le on l.keyId = le.keyId and le.lang = 'en' and isNull(le.customer, '') = @customer");
+            sql.AppendLine("left join t_language lnd on l.keyId = lnd.keyId and lnd.lang = 'no' and isNull(lnd.customer, '') = ''");
+            sql.AppendLine("left join t_language led on l.keyId = led.keyId and led.lang = 'en' and isNull(led.customer, '') = ''");
+            sql.AppendLine("where  l.KeyId in @keyIds");
+
+            return _connection.Query<ExternalTranslation>(sql.ToString(), new {customer, keyIds});
+        }
+
         public IEnumerable<Log> GetLogs()
         {
             StringBuilder sql = new StringBuilder();
