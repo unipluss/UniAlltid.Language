@@ -39,3 +39,7 @@
 .delete:hover {
     color: darkred;
 }
+
+textarea.key-input { 
+	resize:vertical ; 
+}
