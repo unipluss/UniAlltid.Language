@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
 using Microsoft.Owin.Security.OAuth;
+using Mindscape.Raygun4Net.WebApi;
 using Newtonsoft.Json.Serialization;
 
 namespace UniAlltid.Language.API
@@ -16,6 +18,8 @@ namespace UniAlltid.Language.API
             // Configure Web API to use only bearer token authentication.
             //config.SuppressDefaultHostAuthentication();
             //config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));
+
+            RaygunWebApiClient.Attach(config, () => new RaygunWebApiClient(ConfigurationManager.AppSettings["raygunApiKey"]));
 
             // Web API routes
             config.MapHttpAttributeRoutes();

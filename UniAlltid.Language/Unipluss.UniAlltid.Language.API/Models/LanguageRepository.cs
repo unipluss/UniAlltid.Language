@@ -18,6 +18,7 @@ namespace UniAlltid.Language.API.Models
         public LanguageRepository(IDbConnection connection)
         {
             _connection = connection;
+   
         }
 
         public IEnumerable<Translation> Retrieve(string customer, string language)
@@ -25,15 +26,20 @@ namespace UniAlltid.Language.API.Models
             if (IsNullOrEmpty(customer) && IsNullOrEmpty(language))
                 return GetDefaultValues();
 
-            else
-                return GetFilteredValues(customer, language);
+            return GetFilteredValues(customer, language);
         }
 
         public Dictionary<string, string> RetrieveDictionary(string language, string customer)
         {
             var translations = GetFilteredValues(customer, language);
 
-            var dict = translations.ToDictionary(translation => translation.KeyId, translation => translation.Value);
+            var dict = new Dictionary<string, string>();
+
+            foreach (var translation in translations)
+            {
+                if (!dict.ContainsKey(translation.KeyId))
+                    dict.Add(translation.KeyId, translation.Value);
+            }
 
             return dict;
         }
