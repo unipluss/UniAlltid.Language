@@ -216,7 +216,7 @@ namespace UniAlltid.Language.API.Models
         public IEnumerable<Log> GetLogs()
         {
             StringBuilder sql = new StringBuilder();
-            sql.AppendLine("select top 500 * from t_history");
+            sql.AppendLine("select top 500 * from t_history order by id desc");
 
             return _connection.Query<Log>(sql.ToString()).ToList();
         }
