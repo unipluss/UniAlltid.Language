@@ -11,6 +11,7 @@ using Owin;
 using UniAlltid.Language.API;
 using UniAlltid.Language.API.Code.Compression;
 using UniAlltid.Language.API.Models;
+using AppSettingsReader = UniAlltid.Language.API.Code.AppSettingsReader;
 
 [assembly: OwinStartup(typeof(Startup))]
 
@@ -59,6 +60,10 @@ namespace UniAlltid.Language.API
                 return con;
             }).As<IDbConnection>().InstancePerRequest();
 
+            builder.Register(c => new UpdateOptions()
+            {
+                UpdateQueryId4 = AppSettingsReader.UpdateQueryId4
+            }).As<UpdateOptions>().SingleInstance();
 
             builder.RegisterType<LanguageRepository>().As<ILanguageRepository>().InstancePerRequest();
 

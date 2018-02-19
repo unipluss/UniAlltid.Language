@@ -14,11 +14,11 @@ namespace UniAlltid.Language.API.Models
     public class LanguageRepository : ILanguageRepository
     {
         private readonly IDbConnection _connection;
-
-        public LanguageRepository(IDbConnection connection)
+        private readonly UpdateOptions _options;
+        public LanguageRepository(IDbConnection connection, UpdateOptions options)
         {
             _connection = connection;
-   
+            _options = options;
         }
 
         public IEnumerable<Translation> Retrieve(string customer, string language)
@@ -293,13 +293,29 @@ namespace UniAlltid.Language.API.Models
             else
             {
                 // Get by both
-                sql.AppendLine("select l0.*, l2.value as DefaultValue from t_language l0");
-                sql.AppendLine("left join t_language l2  on l0.keyid = l2.keyid and l0.lang = l2.lang  and not isNull(l0.customer, '') = '' and isNull(l2.customer, '') = ''");
-                sql.AppendLine("where not l0.id in (");
-                sql.AppendLine("select l.id from t_language l");
-                sql.AppendLine("left join t_language l1 on l.keyid = l1.keyid and l.lang = l1.lang and l1.customer = @customer");
-                sql.AppendLine("where not l.id = l1.id )");
-                sql.AppendLine("and isNull(l0.customer, @customer) = @customer and l0.lang = @language");
+
+                //Check if updated query should be used
+                if (_options.UpdateQueryId4)
+                {
+                    sql.AppendLine(" select l0.*, l2.value as DefaultValue from t_language l0");
+                    sql.AppendLine(" left join t_language l2  on l0.keyid = l2.keyid and l0.lang = l2.lang and not l0.customer is null and l2.customer is null");
+                    sql.AppendLine(" where not l0.id in (");
+                    sql.AppendLine(" 	select l.id from t_language l");
+                    sql.AppendLine(" 	left join t_language l1 on l.keyid = l1.keyid and l.lang = l1.lang and l1.customer = @customer");
+                    sql.AppendLine(" 	where not l.id = l1.id )");
+                    sql.AppendLine(" and isNull(l0.customer, @customer) = @customer and l0.lang = @language");
+                }
+                else
+                {
+
+                    sql.AppendLine("select l0.*, l2.value as DefaultValue from t_language l0");
+                    sql.AppendLine("left join t_language l2  on l0.keyid = l2.keyid and l0.lang = l2.lang  and not isNull(l0.customer, '') = '' and isNull(l2.customer, '') = ''");
+                    sql.AppendLine("where not l0.id in (");
+                    sql.AppendLine("select l.id from t_language l");
+                    sql.AppendLine("left join t_language l1 on l.keyid = l1.keyid and l.lang = l1.lang and l1.customer = @customer");
+                    sql.AppendLine("where not l.id = l1.id )");
+                    sql.AppendLine("and isNull(l0.customer, @customer) = @customer and l0.lang = @language");
+                }
             }
 
             return _connection.Query<Translation>(sql.ToString(), new { customer, language }).ToList();
