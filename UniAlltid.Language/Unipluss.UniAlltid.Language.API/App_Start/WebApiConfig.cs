@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.Configuration;
-using System.Linq;
-using System.Net.Http;
 using System.Web.Http;
-using Microsoft.Owin.Security.OAuth;
+using System.Web.Http.ExceptionHandling;
 using Mindscape.Raygun4Net.WebApi;
 using Newtonsoft.Json.Serialization;
+using Serilog;
+using Serilog.Core;
+using Serilog.Events;
+using UniAlltid.Language.API.Providers;
+using AppSettingsReader = UniAlltid.Language.API.Code.AppSettingsReader;
 
 namespace UniAlltid.Language.API
 {
@@ -19,7 +21,9 @@ namespace UniAlltid.Language.API
             //config.SuppressDefaultHostAuthentication();
             //config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));
 
-            RaygunWebApiClient.Attach(config, () => new RaygunWebApiClient(ConfigurationManager.AppSettings["raygunApiKey"]));
+           //RaygunWebApiClient.Attach(config, () => new RaygunWebApiClient(ConfigurationManager.AppSettings["raygunApiKey"]));
+           
+            config.Services.Add(typeof(IExceptionLogger), new ExceptionLogProvider(GetLogger(), LogEventLevel.Error, "Uncaught exception in backend {RequestMethod} {RequestPath}"));
 
             // Web API routes
             config.MapHttpAttributeRoutes();
@@ -34,6 +38,26 @@ namespace UniAlltid.Language.API
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional}
             );
+        }
+
+        private static ILogger GetLogger()
+        {
+            var logSwitch = new LoggingLevelSwitch();
+            var logConfig = new LoggerConfiguration();
+            logConfig.Enrich.FromLogContext()
+                .MinimumLevel.ControlledBy(logSwitch)
+
+                .Enrich.WithProperty("servicetype", "unilanguage.api")
+
+#if !DEBUG
+                .WriteTo.Seq(AppSettingsReader.SeqUrl, apiKey: AppSettingsReader.SeqApiKey, controlLevelSwitch: logSwitch);
+
+#endif
+#if DEBUG
+                // https://getseq.net
+                .WriteTo.Seq(AppSettingsReader.SeqUrl, controlLevelSwitch: logSwitch);
+#endif
+            return logConfig.CreateLogger();
         }
     }
 }

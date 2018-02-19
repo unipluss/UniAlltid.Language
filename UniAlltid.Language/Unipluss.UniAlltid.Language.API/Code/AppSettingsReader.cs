@@ -16,5 +16,18 @@ namespace UniAlltid.Language.API.Code
                 return false;
             }
         }
+
+        public static string SeqApiKey => ConfigurationManager.AppSettings["seqApiKey"];
+
+        public static string SeqUrl
+        {
+            get
+            {
+#if DEBUG
+                return "http://localhost:5341/";
+#endif
+                return ConfigurationManager.AppSettings["seqUrl"];
+            }
+        }
     }
 }
