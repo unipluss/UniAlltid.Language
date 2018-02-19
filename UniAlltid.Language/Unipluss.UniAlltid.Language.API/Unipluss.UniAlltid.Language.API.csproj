@@ -259,6 +259,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Code\AppSettingsReader.cs" />
     <Compile Include="Code\Compression\CompressedContent.cs" />
     <Compile Include="Code\Compression\CompressionHandler.cs" />
     <Compile Include="Code\Compression\Compressor.cs" />
@@ -281,6 +282,7 @@
     <Compile Include="Models\Log.cs" />
     <Compile Include="Models\Translation.cs" />
     <Compile Include="Models\LanguageRepository.cs" />
+    <Compile Include="Models\UpdateOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
